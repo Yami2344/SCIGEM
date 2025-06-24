@@ -1,0 +1,97 @@
+header {
+  background: linear-gradient(90deg, #660021, #00333a);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 15px;
+  border-bottom: 3px solid white;
+  flex-wrap: wrap;
+}
+
+.header-left,
+.header-center,
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-left {
+  gap: 10px;
+}
+
+.back-link svg {
+  cursor: pointer;
+  transition: stroke 0.3s ease;
+}
+
+.back-link:hover svg {
+  stroke: #ffcc00;
+}
+
+.header-logo {
+  height: 60px;
+  width: auto;
+}
+
+.header-center {
+  flex-direction: column;
+  text-align: center;
+  flex: 1;
+}
+
+.header-center h1 {
+  font-size: 18px;
+  margin: 0;
+  font-weight: bold;
+  color: white;
+}
+
+.header-center h2 {
+  font-size: 14px;
+  margin: 0;
+  font-weight: normal;
+  color: white;
+}
+
+.header-right {
+  gap: 10px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.icon-button svg {
+  transition: fill 0.3s ease;
+}
+
+.icon-button:hover svg {
+  fill: #ffcc00;
+}
+
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .header-center h1 {
+    font-size: 16px;
+  }
+
+  .header-center h2 {
+    font-size: 12px;
+  }
+
+  .header-logo {
+    height: 50px;
+  }
+}
+
+

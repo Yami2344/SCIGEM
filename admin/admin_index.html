@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reportes - POA Planeación Municipal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/estilos.css">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    .grid-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .button {
+      background-color: #660021;
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      font-weight: bold;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      min-width: 200px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .logout-btn {
+      background-color: #660021;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      margin-top: 30px;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+<div class="header-left">
+    <a href="index.html" title="Regresar">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <img src="img/chapul.png" alt="Chapulhuacán" class="header-logo" />
+  </div>
+  <div class="header-center">
+    <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
+    <h2>Área: Planeación Municipal</h2>
+  </div>
+  <div class="header-right">
+    <img src="img/planeacion.png" alt="Planeación" class="header-logo" />
+  </div>
+</header>
+
+<!-- BOTONES INICIO -->
+<div class="grid-container">
+  <a href="reportes.html" class="button">REPORTES</a>
+  <a href="analisis.html" class="button">ANÁLISIS</a>
+  <a href="observaciones.html" class="button">OBSERVACIONES</a>
+</div>
+
+<!-- CIERRE DE SESIÓN -->
+<div>
+  <button onclick="logout()" class="logout-btn">Cerrar sesión</button>
+</div>
+
+<!-- CHATBOT -->
+<div id="chat-box" style="display:none; position:fixed; bottom:80px; right:20px; z-index:999;">
+  <iframe height="430" width="350" src="https://bot.dialogflow.com/551229f7-dbae-44ca-af3d-c46793a7d1fd" style="border: none; border-radius: 10px;"></iframe>
+</div>
+
+<script>
+  const chatBtn = document.querySelector('[title="Chat"]');
+  const chatBox = document.getElementById("chat-box");
+
+  chatBtn.addEventListener("click", () => {
+    chatBox.style.display = chatBox.style.display === "none" ? "block" : "none";
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Plan Presupuestal con Calendario</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      margin: 0;
+    }
+
+    header {
+      background: linear-gradient(90deg, #660021, #00333a);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      flex-wrap: wrap;
+    }
+
+    .header-logo {
+      width: 120px;
+    }
+
+    .header-center {
+      flex: 1;
+      text-align: center;
+    }
+
+    h1, h2 {
+      margin: 5px 0;
+    }
+
+    .scroll-container {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: auto;
+      border-top: 4px solid #00333a;
+      padding: 10px;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: 10px;
+      font-size: 11px;
+    }
+
+    th, td {
+      border: 1px solid #999;
+      padding: 2px;
+      text-align: center;
+      min-width: 100px;
+    }
+
+    th {
+      background-color: #00333a;
+      color: white;
+    }
+
+    textarea {
+      resize: horizontal;
+      min-width: 120px;
+      height: 100%;
+    }
+
+    .day-cell {
+      width: 25px;
+      height: 25px;
+      padding: 0;
+      font-size: 10px;
+      cursor: pointer;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .calendar-controls, .bottom-buttons, .legend {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .button {
+      background-color: #660021;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    select {
+      padding: 5px;
+      border-radius: 5px;
+      margin: 0 5px;
+    }
+
+    .subtotal {
+      background-color: #f0f0f0;
+    }
+
+    .color-button {
+      width: 25px;
+      height: 25px;
+      border: 2px solid #000;
+      cursor: pointer;
+      display: inline-block;
+      margin-right: 5px;
+      border-radius: 5px;
+    }
+
+    .vacaciones { background-color: lightblue; color: black; }
+    .descanso { background-color: red; }
+    .nolaboral { background-color: gold; color: black; }
+    .concluida { background-color: green; }
+    .seguimiento { background-color: orange; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <a href="index.html" title="Regresar">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <img src="img/chapul.png" alt="Chapulhuacán" class="header-logo" />
+  </div>
+  <div class="header-center">
+    <h1>PLAN PRESUPUESTAL - POA</h1>
+    <h2>Área: Planeación Municipal</h2>
+  </div>
+  <div class="header-right">
+    <img src="img/planeacion.png" alt="Planeación" class="header-logo" />
+  </div>
+</header>
+
+<div class="calendar-controls">
+  <label>Mes:
+    <select id="month"></select>
+  </label>
+  <label>Año:
+    <select id="year"></select>
+  </label>
+</div>
+
+<div class="legend">
+  <span class="vacaciones">Vacaciones</span>
+  <span class="descanso">Descanso</span>
+  <span class="nolaboral">No laboral</span>
+  <span class="concluida">Concluida</span>
+  <span class="seguimiento">Seguimiento</span>
+</div>
+
+<div class="color-picker" style="text-align: center;">
+  <div class="color-button vacaciones" onclick="seleccionarColor('lightblue')"></div>
+  <div class="color-button descanso" onclick="seleccionarColor('red')"></div>
+  <div class="color-button nolaboral" onclick="seleccionarColor('gold')"></div>
+  <div class="color-button concluida" onclick="seleccionarColor('green')"></div>
+  <div class="color-button seguimiento" onclick="seleccionarColor('orange')"></div>
+</div>
+
+<div class="scroll-container">
+  <table id="actividadTable">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Descripción</th>
+        <th>Partida Presupuestal</th>
+        <th>Acuerdo</th>
+        <th>Objetivo</th>
+        <th>Estrategia</th>
+        <th>Línea de Acción</th>
+        <th>Unidad de Medida</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody id="actividadBody"></tbody>
+  </table>
+
+  <table id="calendarTable">
+    <thead>
+      <tr id="calendarHeader">
+        <th>Día</th>
+      </tr>
+    </thead>
+    <tbody id="calendarBody"></tbody>
+  </table>
+</div>
+
+<div class="bottom-buttons">
+  <button onclick="addRow()" class="button">➕ Agregar Actividad</button>
+  <button onclick="deleteRow()" class="button">🗑️ Eliminar Actividad</button>
+  <button onclick="window.location.href='evidencias.html'" class="button">📤 Subir Evidencia</button>
+</div>
+
+<script>
+  let colorSeleccionado = "";
+  let diasDelMes = [];
+
+  function seleccionarColor(color) {
+    colorSeleccionado = color;
+  }
+
+  function pintarCelda(celda) {
+    if (colorSeleccionado) {
+      celda.style.backgroundColor = colorSeleccionado;
+    }
+  }
+
+  function calcularSubtotal(elemento) {
+    const fila = elemento.closest("tr");
+    const cantidad = parseFloat(fila.children[8].innerText) || 0;
+    const precio = parseFloat(fila.children[9].innerText) || 0;
+    const subtotal = cantidad * precio;
+    fila.children[10].innerText = subtotal.toFixed(2);
+  }
+
+  function addRow() {
+    const actBody = document.getElementById("actividadBody");
+    const calBody = document.getElementById("calendarBody");
+    const index = actBody.rows.length + 1;
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${index}</td>
+      <td contenteditable="true"></td>
+      <td contenteditable="true"></td>
+      <td contenteditable="true"></td>
+      <td contenteditable="true"></td>
+      <td contenteditable="true"></td>
+      <td contenteditable="true"></td>
+      <td contenteditable="true"></td>
+      <td contenteditable="true" oninput="calcularSubtotal(this)"></td>
+      <td contenteditable="true" oninput="calcularSubtotal(this)"></td>
+      <td class="subtotal">0</td>
+    `;
+    actBody.appendChild(row);
+
+    const calRow = document.createElement("tr");
+    const tdTitulo = document.createElement("td");
+    tdTitulo.textContent = `Act. ${index}`;
+    calRow.appendChild(tdTitulo);
+
+    diasDelMes.forEach(() => {
+      const td = document.createElement("td");
+      td.classList.add("day-cell");
+      td.contentEditable = true;
+      td.onclick = () => pintarCelda(td);
+      calRow.appendChild(td);
+    });
+
+    calBody.appendChild(calRow);
+  }
+
+  function deleteRow() {
+    const actBody = document.getElementById("actividadBody");
+    const calBody = document.getElementById("calendarBody");
+    if (actBody.rows.length > 0) {
+      actBody.deleteRow(actBody.rows.length - 1);
+      calBody.deleteRow(calBody.rows.length - 1);
+    }
+  }
+
+  function crearDiasCalendario(mes, anio) {
+    const header = document.getElementById("calendarHeader");
+    const calBody = document.getElementById("calendarBody");
+    const actBody = document.getElementById("actividadBody");
+
+    header.innerHTML = "<th>Día</th>";
+    diasDelMes = [];
+
+    const numDias = new Date(anio, mes + 1, 0).getDate();
+    for (let i = 1; i <= numDias; i++) {
+      const th = document.createElement("th");
+      th.textContent = i;
+      header.appendChild(th);
+      diasDelMes.push(i);
+    }
+
+    calBody.innerHTML = "";
+    for (let i = 0; i < actBody.rows.length; i++) {
+      const calRow = document.createElement("tr");
+      const tdTitulo = document.createElement("td");
+      tdTitulo.textContent = `Act. ${i + 1}`;
+      calRow.appendChild(tdTitulo);
+
+      diasDelMes.forEach(() => {
+        const td = document.createElement("td");
+        td.classList.add("day-cell");
+        td.contentEditable = true;
+        td.onclick = () => pintarCelda(td);
+        calRow.appendChild(td);
+      });
+
+      calBody.appendChild(calRow);
+    }
+  }
+
+  function initMonthYear() {
+    const mesSelect = document.getElementById("month");
+    const yearSelect = document.getElementById("year");
+
+    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+    meses.forEach((m, i) => mesSelect.appendChild(new Option(m, i)));
+
+    const anioActual = new Date().getFullYear();
+    for (let y = anioActual - 3; y <= anioActual + 3; y++) {
+      yearSelect.appendChild(new Option(y, y));
+    }
+
+    mesSelect.value = new Date().getMonth();
+    yearSelect.value = anioActual;
+
+    mesSelect.onchange = () => crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
+    yearSelect.onchange = () => crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
+
+    crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initMonthYear();
+    addRow();
+  });
+</script>
+
+</body>
+</html>

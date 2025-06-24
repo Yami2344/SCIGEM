@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Subir Imágenes - POA</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1, h2 {
+      color: white;
+      margin: 0;
+    }
+
+    .evidence-form {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      border: 2px solid #660021;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+    }
+
+    header {
+      background: linear-gradient(90deg, #660021, #00333a);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      flex-wrap: wrap;
+    }
+
+    .header-logo {
+      width: 100px;
+      height: auto;
+    }
+
+    .header-left,
+    .header-center,
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left a {
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-center {
+      flex-direction: column;
+      flex: 1;
+      text-align: center;
+    }
+
+    .icon-button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    h3 {
+      color: #00333a;
+      text-align: center;
+      margin-top: 0;
+    }
+
+    .upload-section {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    input[type="file"] {
+      margin-top: 10px;
+    }
+
+    #previewContainer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .preview-img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .btn-save {
+      display: block;
+      margin: 30px auto 10px;
+      padding: 10px 20px;
+      background-color: #660021;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <a href="index.html" title="Regresar">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <img src="img/chapul.png" alt="Chapulhuacán" class="header-logo" />
+  </div>
+
+  <div class="header-center">
+    <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
+    <h2>Área: Planeación Municipal</h2>
+  </div>
+
+  <div class="header-right">
+    <img src="img/planeacion.png" alt="Planeación" class="header-logo" />
+    <button class="icon-button" title="Notificaciones">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6v-5a6 6 0 0 0-5-5.91V5a1 1 0 1 0-2 0v.09A6 6 0 0 0 6 11v5l-2 2v1h16v-1l-2-2z"/>
+      </svg>
+    </button>
+    <button class="icon-button" title="Chat">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M4 4h16v12H5.17L4 17.17V4zM2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="evidence-form">
+  <h3>Subir imágenes de evidencia</h3>
+
+  <div class="upload-section">
+    <input type="file" id="imageUploader" multiple accept="image/*" onchange="previewMultipleImages(event)">
+  </div>
+
+  <div id="previewContainer"></div>
+
+  <button class="btn-save" onclick="guardarImagenes()">Guardar imágenes</button>
+</div>
+
+<script>
+  function previewMultipleImages(event) {
+    const files = event.target.files;
+    const previewContainer = document.getElementById("previewContainer");
+    previewContainer.innerHTML = "";
+
+    Array.from(files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        img.className = "preview-img";
+        previewContainer.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function guardarImagenes() {
+    alert("🔒 Esta función requiere configuración de servidor para guardar los archivos.");
+    // Aquí se enviaría el formulario a PHP o se usaría Firebase/FTP/AJAX
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Subir Evidencias - POA</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1, h2 {
+      color: white;
+      margin: 0;
+    }
+
+    .evidence-form {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      border: 2px solid #660021;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    thead {
+      background-color: #00333a;
+      color: white;
+    }
+
+    img {
+      max-width: 100px;
+      max-height: 100px;
+    }
+
+    header {
+      background: linear-gradient(90deg, #660021, #00333a);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      flex-wrap: wrap;
+    }
+
+    .header-logo {
+      width: 100px;
+      height: auto;
+    }
+
+    .header-left,
+    .header-center,
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left a {
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-center {
+      flex-direction: column;
+      flex: 1;
+      text-align: center;
+    }
+
+    .icon-button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .warning {
+      color: #660021;
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    h3 {
+      color: #00333a;
+      text-align: center;
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <a href="Plan de actividades.html" title="Regresar" aria-label="Regresar a página principal">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <img src="img/chapul.png" alt="Chapulhuacán" class="header-logo" />
+  </div>
+
+  <div class="header-center">
+    <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
+    <h2>Área: Planeación Municipal</h2>
+  </div>
+
+  <div class="header-right">
+    <img src="img/planeacion.png" alt="Planeación" class="header-logo" />
+    <button class="icon-button" title="Notificaciones" aria-label="Notificaciones">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6v-5a6 6 0 0 0-5-5.91V5a1 1 0 1 0-2 0v.09A6 6 0 0 0 6 11v5l-2 2v1h16v-1l-2-2z"/>
+      </svg>
+    </button>
+    <button class="icon-button" title="Chat" aria-label="Chat">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M4 4h16v12H5.17L4 17.17V4zM2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="evidence-form" id="evidenceContainer">
+  <h3>Subir imagen por cada actividad realizada</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Actividad</th>
+        <th>Imagen</th>
+        <th>Vista Previa</th>
+      </tr>
+    </thead>
+    <tbody id="evidenceTableBody">
+      <!-- Filas dinámicas -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+  const actividades = JSON.parse(localStorage.getItem("actividadesPOA")) || [];
+  const tableBody = document.getElementById("evidenceTableBody");
+
+  if (actividades.length === 0) {
+    document.getElementById("evidenceContainer").innerHTML += 
+      "<p class='warning'>⚠️ Aún no se han registrado actividades.</p>";
+  } else {
+    actividades.forEach((actividad, index) => {
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${actividad}</td>
+        <td>
+          <input type="file" accept="image/*" onchange="previewImage(event, ${index})" />
+        </td>
+        <td>
+          <img id="preview-${index}" src="" alt="Vista previa" style="display: none;" />
+        </td>
+      `;
+
+      tableBody.appendChild(row);
+    });
+  }
+
+  function previewImage(event, index) {
+    const file = event.target.files[0];
+    const preview = document.getElementById(`preview-${index}`);
+    
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+</script>
+
+</body>
+</html>

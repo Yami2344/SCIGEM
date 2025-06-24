@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Programa Operativo Anual - Planeación Municipal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/estilos.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    .grid-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .button {
+      background-color: #660021;
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      font-weight: bold;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      min-width: 200px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .evaluaciones {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .eval-col {
+      border: 2px solid #660021;
+      padding: 10px 20px;
+    }
+
+    .eval-col span {
+      display: block;
+      margin: 5px 0;
+      font-weight: bold;
+    }
+
+    .eval-header {
+      background-color: #00333a;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .porcentaje {
+      background-color: #00333a;
+      color: white;
+      padding: 15px;
+      margin-top: 30px;
+      display: inline-block;
+      font-weight: bold;
+    }
+
+    .logout-btn {
+      background-color: #660021;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      margin-top: 30px;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+
+    .icon-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <a href="index.html" class="back-link" title="Regresar" aria-label="Regresar a página principal">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <img src="img/chapul.png" alt="Chapulhuacán" class="header-logo" />
+  </div>
+
+  <div class="header-center">
+    <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
+    <h2>Área: Planeación Municipal</h2>
+  </div>
+
+  <div class="header-right">
+    <img src="img/planeacion.png" alt="Planeación" class="header-logo" />
+    <button class="icon-button" title="Notificaciones" aria-label="Notificaciones">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6v-5a6 6 0 0 0-5-5.91V5a1 1 0 1 0-2 0v.09A6 6 0 0 0 6 11v5l-2 2v1h16v-1l-2-2z" />
+      </svg>
+    </button>
+    <button class="icon-button" title="Chat" aria-label="Chat">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M4 4h16v12H5.17L4 17.17V4zM2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- BOTONES PRINCIPALES -->
+<div class="grid-container">
+  <a href="Plan de actividades.html" class="button">PLAN DE ACTIVIDADES</a>
+  <a href="Plan presupuestal.html" class="button">PLAN PRESUPUESTAL</a>
+  <a href="Alineacion PMD.html" class="button">ALINEACIÓN PMD</a>
+  <a href="Imagenes.html" class="button">IMAGENES</a>
+  <a href="../admin/admin_index.html">Ir a panel de administrador</a>
+
+</div>
+
+<!-- BOTÓN DE CIERRE DE SESIÓN -->
+<div style="margin-top: 20px;">
+  <button onclick="logout()" class="logout-btn">Cerrar sesión</button>
+</div>
+
+<!-- BOTONES GUARDAR Y ENVIAR -->
+<div class="grid-container">
+  <button class="button" onclick="guardar()">GUARDAR</button>
+  <button class="button" onclick="enviar()">ENVIAR</button>
+</div>
+
+<!-- CHATBOT DIALOGFLOW -->
+<div id="chat-box" style="display:none; position:fixed; bottom:80px; right:20px; z-index:999;">
+  <iframe height="430" width="350" src="https://bot.dialogflow.com/551229f7-dbae-44ca-af3d-c46793a7d1fd" style="border: none; border-radius: 10px;"></iframe>
+</div>
+
+<!-- SCRIPT DE CHAT -->
+<script>
+  const chatBtn = document.querySelector('[title="Chat"]');
+  const chatBox = document.getElementById("chat-box");
+
+  chatBtn.addEventListener("click", () => {
+    chatBox.style.display = chatBox.style.display === "none" ? "block" : "none";
+  });
+</script>
+
+</body>
+</html>

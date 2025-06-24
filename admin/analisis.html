@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Encabezado POA</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to right, #660021, #00333a);
+      padding: 15px 30px;
+      color: white;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    .header-left, .header-center, .header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left img,
+    .header-right img {
+      height: 60px;
+      margin: 0 10px;
+    }
+
+    .header-center {
+      flex: 1;
+      flex-direction: column;
+      text-align: center;
+      justify-content: center;
+    }
+
+    .header-center h1 {
+      font-size: 22px;
+      margin: 2px 0;
+      font-weight: bold;
+    }
+
+    .header-center h2 {
+      font-size: 16px;
+      margin: 0;
+      font-weight: normal;
+    }
+
+    .icon-button {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 8px;
+      padding: 8px;
+      margin: 0 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .icon-button:hover {
+      background-color: #ffcc00;
+      border-color: #ffcc00;
+      transform: scale(1.05);
+    }
+
+    .icon-button svg {
+      fill: white;
+      width: 24px;
+      height: 24px;
+      transition: fill 0.3s ease;
+    }
+
+    .icon-button:hover svg {
+      fill: #00333a;
+    }
+
+    a.icon-button {
+      text-decoration: none;
+    }
+    
+  .contenido {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 👈 centra horizontalmente todos los hijos */
+  }
+
+  .contenido h2 {
+    color: #00333a;
+    margin-bottom: 20px;
+    text-align: center; /* 👈 asegura el centrado del título */
+  }
+
+  .contenido label {
+    font-weight: bold;
+    margin: 10px 5px;
+    color: #660021;
+    display: inline-block;
+    text-align: right;
+  }
+
+  .contenido select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin: 10px;
+    font-size: 16px;
+  }
+
+  .contenido button {
+    background: linear-gradient(to right, #660021, #00333a);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    margin: 10px 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  }
+
+  .contenido button:hover {
+    background: #ffcc00;
+    color: #00333a;
+    transform: scale(1.05);
+  }
+
+  canvas#graficaPresupuesto {
+    margin-top: 30px;
+    max-width: 100%;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <a href="admin_index.html" class="icon-button" title="Regresar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <img src="img/chapul.png" alt="Chapulhuacán">
+  </div>
+
+  <div class="header-center">
+    <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
+    <h2>Análisis Presupuestal</h2>
+  </div>
+
+  <div class="header-right">
+    <img src="img/planeacion.png" alt="Planeación">
+    <button class="icon-button" title="Notificaciones">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6v-5a6 6 0 0 0-5-5.91V5a1 1 0 1 0-2 0v.09A6 6 0 0 0 6 11v5l-2 2v1h16v-1l-2-2z"/>
+      </svg>
+    </button>
+    <button class="icon-button" title="Chat">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M4 4h16v12H5.17L4 17.17V4zM2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- CONTENIDO DE ANÁLISIS -->
+<div class="contenido">
+  <h2>Consulta de Análisis Presupuestal</h2>
+
+  <label for="mes">Mes:</label>
+  <select id="mes">
+    <option value="01">Enero</option>
+    <option value="02">Febrero</option>
+    <option value="03">Marzo</option>
+    <option value="04">Abril</option>
+    <option value="05">Mayo</option>
+    <option value="06">Junio</option>
+    <option value="07">Julio</option>
+    <option value="08">Agosto</option>
+    <option value="09">Septiembre</option>
+    <option value="10">Octubre</option>
+    <option value="11">Noviembre</option>
+    <option value="12">Diciembre</option>
+  </select>
+
+  <label for="anio">Año:</label>
+  <select id="anio">
+    <option value="2025">2025</option>
+    <option value="2024">2024</option>
+  </select>
+
+  <div>
+    <button onclick="cargarGrafica()">Consultar</button>
+    <button onclick="analisisMesActual()">Análisis del Mes Actual</button>
+  </div>
+
+  <canvas id="graficaPresupuesto"></canvas>
+</div>
+
+<script>
+  function cargarGrafica() {
+    const mes = document.getElementById('mes').value;
+    const anio = document.getElementById('anio').value;
+
+    fetch(`backend/analisis.php?mes=${mes}&anio=${anio}`)
+      .then(response => response.json())
+      .then(data => {
+        mostrarGrafica(data);
+      });
+  }
+
+  function analisisMesActual() {
+    const fecha = new Date();
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const anio = fecha.getFullYear();
+
+    document.getElementById('mes').value = mes;
+    document.getElementById('anio').value = anio;
+
+    cargarGrafica();
+  }
+
+  function mostrarGrafica(data) {
+    const ctx = document.getElementById('graficaPresupuesto').getContext('2d');
+    if (window.miGrafica) window.miGrafica.destroy();
+
+    window.miGrafica = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.etiquetas,
+        datasets: [{
+          label: 'Gasto mensual (MXN)',
+          data: data.valores,
+          backgroundColor: '#00333a'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top' },
+          title: { display: true, text: `Reporte presupuestal: ${data.mesNombre} ${data.anio}` }
+        }
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

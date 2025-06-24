@@ -1,0 +1,31 @@
+
+
+.tabla-evidencias {
+  width: 90%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.tabla-evidencias th,
+.tabla-evidencias td {
+  border: 1px solid #660021;
+  padding: 8px;
+  text-align: center;
+}
+
+.tabla-evidencias th {
+  background-color: #00333a;
+  color: white;
+}
+
+.guardar-btn {
+  background-color: #660021;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
