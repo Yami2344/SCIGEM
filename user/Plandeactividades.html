@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Plan Presupuestal con Calendario</title>
+  <title>Programa Operativo Anual (POA)</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -36,7 +36,6 @@
     .scroll-container {
       display: flex;
       overflow-x: auto;
-      overflow-y: auto;
       border-top: 4px solid #00333a;
       padding: 10px;
     }
@@ -44,12 +43,11 @@
     table {
       border-collapse: collapse;
       margin: 10px;
-      font-size: 11px;
     }
 
     th, td {
-      border: 1px solid #999;
-      padding: 2px;
+      border: 1px solid #ccc;
+      padding: 6px;
       text-align: center;
       min-width: 100px;
     }
@@ -66,19 +64,30 @@
     }
 
     .day-cell {
-      width: 25px;
-      height: 25px;
-      padding: 0;
-      font-size: 10px;
+      min-width: 40px;
       cursor: pointer;
-      overflow: hidden;
-      white-space: nowrap;
     }
 
-    .calendar-controls, .bottom-buttons, .legend {
+    .color-picker, .calendar-controls, .bottom-buttons, .legend {
       text-align: center;
       margin-top: 10px;
     }
+
+    .color-button {
+      width: 30px;
+      height: 30px;
+      border: 2px solid #000;
+      cursor: pointer;
+      display: inline-block;
+      margin-right: 5px;
+      border-radius: 5px;
+    }
+
+    .vacaciones { background-color: lightblue; color: black; }
+    .descanso { background-color: red; }
+    .nolaboral { background-color: gold; color: black; }
+    .concluida { background-color: green; }
+    .seguimiento { background-color: orange; }
 
     .button {
       background-color: #660021;
@@ -96,33 +105,13 @@
       border-radius: 5px;
       margin: 0 5px;
     }
-
-    .subtotal {
-      background-color: #f0f0f0;
-    }
-
-    .color-button {
-      width: 25px;
-      height: 25px;
-      border: 2px solid #000;
-      cursor: pointer;
-      display: inline-block;
-      margin-right: 5px;
-      border-radius: 5px;
-    }
-
-    .vacaciones { background-color: lightblue; color: black; }
-    .descanso { background-color: red; }
-    .nolaboral { background-color: gold; color: black; }
-    .concluida { background-color: green; }
-    .seguimiento { background-color: orange; }
   </style>
 </head>
 <body>
 
 <header>
   <div class="header-left">
-    <a href="index.html" title="Regresar">
+    <a href="../index.html" title="Regresar">
       <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
         <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
@@ -130,7 +119,7 @@
     <img src="img/chapul.png" alt="Chapulhuacán" class="header-logo" />
   </div>
   <div class="header-center">
-    <h1>PLAN PRESUPUESTAL - POA</h1>
+    <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
     <h2>Área: Planeación Municipal</h2>
   </div>
   <div class="header-right">
@@ -155,7 +144,7 @@
   <span class="seguimiento">Seguimiento</span>
 </div>
 
-<div class="color-picker" style="text-align: center;">
+<div class="color-picker">
   <div class="color-button vacaciones" onclick="seleccionarColor('lightblue')"></div>
   <div class="color-button descanso" onclick="seleccionarColor('red')"></div>
   <div class="color-button nolaboral" onclick="seleccionarColor('gold')"></div>
@@ -168,16 +157,11 @@
     <thead>
       <tr>
         <th>No.</th>
-        <th>Descripción</th>
-        <th>Partida Presupuestal</th>
+        <th>Actividad</th>
         <th>Acuerdo</th>
         <th>Objetivo</th>
         <th>Estrategia</th>
         <th>Línea de Acción</th>
-        <th>Unidad de Medida</th>
-        <th>Cantidad</th>
-        <th>Precio Unitario</th>
-        <th>Subtotal</th>
       </tr>
     </thead>
     <tbody id="actividadBody"></tbody>
@@ -194,8 +178,8 @@
 </div>
 
 <div class="bottom-buttons">
-  <button onclick="addRow()" class="button">➕ Agregar Actividad</button>
-  <button onclick="deleteRow()" class="button">🗑️ Eliminar Actividad</button>
+  <button onclick="addRow()" class="button">➕Agregar Actividad</button>
+  <button onclick="deleteRow()" class="button">🗑️​Eliminar Actividad</button>
   <button onclick="window.location.href='evidencias.html'" class="button">📤 Subir Evidencia</button>
 </div>
 
@@ -213,12 +197,9 @@
     }
   }
 
-  function calcularSubtotal(elemento) {
-    const fila = elemento.closest("tr");
-    const cantidad = parseFloat(fila.children[8].innerText) || 0;
-    const precio = parseFloat(fila.children[9].innerText) || 0;
-    const subtotal = cantidad * precio;
-    fila.children[10].innerText = subtotal.toFixed(2);
+  function autoExpand(textarea) {
+    textarea.style.width = 'auto';
+    textarea.style.width = textarea.scrollWidth + "px";
   }
 
   function addRow() {
@@ -229,16 +210,11 @@
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${index}</td>
-      <td contenteditable="true"></td>
-      <td contenteditable="true"></td>
-      <td contenteditable="true"></td>
-      <td contenteditable="true"></td>
-      <td contenteditable="true"></td>
-      <td contenteditable="true"></td>
-      <td contenteditable="true"></td>
-      <td contenteditable="true" oninput="calcularSubtotal(this)"></td>
-      <td contenteditable="true" oninput="calcularSubtotal(this)"></td>
-      <td class="subtotal">0</td>
+      <td><textarea oninput="autoExpand(this)" placeholder="Actividad"></textarea></td>
+      <td><textarea oninput="autoExpand(this)" placeholder="Acuerdo"></textarea></td>
+      <td><textarea oninput="autoExpand(this)" placeholder="Objetivo"></textarea></td>
+      <td><textarea oninput="autoExpand(this)" placeholder="Estrategia"></textarea></td>
+      <td><textarea oninput="autoExpand(this)" placeholder="Línea de Acción"></textarea></td>
     `;
     actBody.appendChild(row);
 
@@ -265,6 +241,10 @@
       actBody.deleteRow(actBody.rows.length - 1);
       calBody.deleteRow(calBody.rows.length - 1);
     }
+  }
+
+  function subirEvidencia() {
+    alert("Función de subir evidencia no implementada.");
   }
 
   function crearDiasCalendario(mes, anio) {
