@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Indicadores</title>
   <link rel="stylesheet" href="css/estilos.css">
-
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,9 +12,38 @@
       padding: 20px;
     }
 
-    h2 {
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #00333a;
+      color: white;
+      padding: 15px;
+    }
+
+    .header-left, .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo {
+      height: 50px;
+    }
+
+    .header-center {
       text-align: center;
-      color: #660021;
+      flex-grow: 1;
+    }
+
+    .header-center h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .header-center h2 {
+      margin: 5px 0 0 0;
+      font-size: 16px;
     }
 
     table {
@@ -30,6 +58,7 @@
       font-size: 12px;
       padding: 5px;
       word-wrap: break-word;
+      overflow: auto;
     }
 
     th {
@@ -49,11 +78,13 @@
 
     .comments-column {
       background-color: #d9b3b3;
+      min-width: 200px;
     }
 
     .indicator-name {
       background-color: #d9b3b3;
       text-align: left;
+      min-width: 250px;
     }
 
     .number-column {
@@ -64,126 +95,128 @@
     td[contenteditable="true"]:focus {
       outline: 2px solid #00333a;
     }
+
+    td[contenteditable="true"] {
+      min-width: 40px;
+    }
+
+    .month-header, td:not(.indicator-name):not(.comments-column):not(.number-column) {
+      max-width: 30px;
+    }
+
+    .btn-row {
+      padding: 10px 20px;
+      font-weight: bold;
+      background-color: #00333a;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px 5px;
+    }
+
+    .btn-row:hover {
+      background-color: #660021;
+    }
+
+    .button-container {
+      text-align: center;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
-    <header>
-  <div class="header-left">
-    <a href="../index.html" title="Regresar">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
-        <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </a>
-    <img src="img/chapul.png" alt="Chapulhuacán" class="header-logo" />
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <a href="../index.html" title="Regresar">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+          <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <img src="img/chapul.png" alt="Chapulhuacán" class="header-logo" />
+    </div>
+    <div class="header-center">
+      <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
+      <h2>Indicadores para el informe de Gobierno</h2>
+    </div>
+    <div class="header-right">
+      <img src="img/planeacion.png" alt="Planeación" class="header-logo" />
+    </div>
+  </header>
+
+  <!-- TABLA -->
+  <table>
+    <thead>
+      <tr>
+        <th rowspan="2" class="number-column">NO.</th>
+        <th rowspan="2" class="indicator-name">NOMBRE DEL INDICADOR</th>
+        <th colspan="12" class="year-header">2025</th>
+        <th rowspan="2" class="comments-column">COMENTARIOS</th>
+      </tr>
+      <tr>
+        <th class="month-header">ENE</th>
+        <th class="month-header">FEB</th>
+        <th class="month-header">MAR</th>
+        <th class="month-header">ABR</th>
+        <th class="month-header">MAY</th>
+        <th class="month-header">JUN</th>
+        <th class="month-header">JUL</th>
+        <th class="month-header">AGO</th>
+        <th class="month-header">SEP</th>
+        <th class="month-header">OCT</th>
+        <th class="month-header">NOV</th>
+        <th class="month-header">DIC</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Fila 0 protegida -->
+      <tr>
+        <td>0</td>
+        <td contenteditable="true">No hay indicadores relacionados</td>
+        <td colspan="12">0</td>
+        <td contenteditable="true"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- BOTONES -->
+  <div class="button-container">
+    <button onclick="agregarFila()" class="btn-row">➕ Agregar Fila</button>
+    <button onclick="eliminarFila()" class="btn-row">🗑️ Eliminar Fila</button>
   </div>
-  <div class="header-center">
-    <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
-    <h2>Indicadores para el informe de Gobierno</h2>
-  </div>
-  <div class="header-right">
-    <img src="img/planeacion.png" alt="Planeación" class="header-logo" />
-  </div>
 
-</header>
+  <!-- SCRIPT -->
+  <script>
+    function agregarFila() {
+      const tbody = document.querySelector("tbody");
+      const rowCount = tbody.querySelectorAll("tr").length;
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${rowCount}</td>
+        <td contenteditable="true"></td>
+        ${Array(12).fill('<td contenteditable="true">0</td>').join('')}
+        <td contenteditable="true"></td>
+      `;
+      tbody.appendChild(row);
+    }
 
+    function eliminarFila() {
+      const tbody = document.querySelector("tbody");
+      const rows = tbody.querySelectorAll("tr");
+      if (rows.length > 1) {
+        tbody.removeChild(rows[rows.length - 1]);
+      } else {
+        alert("No puedes eliminar la fila 0.");
+      }
+    }
 
-<table>
-  <thead>
-    <tr>
-      <th rowspan="2" class="number-column">NO.</th>
-      <th rowspan="2" class="indicator-name">NOMBRE DEL INDICADOR</th>
-      <th colspan="4" class="year-header">2024</th>
-      <th colspan="9" class="year-header">2025</th>
-      <th rowspan="2" class="comments-column">COMENTARIOS</th>
-    </tr>
-    <tr>
-      <th class="month-header">SEP</th>
-      <th class="month-header">OCT</th>
-      <th class="month-header">NOV</th>
-      <th class="month-header">DIC</th>
-      <th class="month-header">ENE</th>
-      <th class="month-header">FEB</th>
-      <th class="month-header">MAR</th>
-      <th class="month-header">ABR</th>
-      <th class="month-header">MAY</th>
-      <th class="month-header">JUN</th>
-      <th class="month-header">JUL</th>
-      <th class="month-header">AGO</th>
-      <th class="month-header">SEP</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Fila 0 (predefinida como "No hay indicadores relacionados") -->
-    <tr>
-      <td>0</td>
-      <td contenteditable="true">No hay indicadores relacionados</td>
-      <td colspan="13">0</td>
-      <td contenteditable="true"></td>
-    </tr>
-
-    <!-- Fila editable desde 1 hasta 50 -->
-    <!-- Puedes duplicar estas filas si necesitas más -->
-    <!-- Contenido editable en cada celda -->
-    <!-- Por simplicidad aquí solo dejo 10 filas -->
-    <!-- Cambia 10 por 50 si quieres el total desde ya -->
-    <!-- Usa JS luego si quieres que se genere dinámicamente -->
-    <!-- Aquí solo muestro las primeras 10 -->
-    <!-- Continúa copiando si deseas más -->
-
-    <!-- FILAS DE EJEMPLO -->
-    <!-- Repite según lo necesario -->
-    <!-- contenteditable habilita la edición directa -->
-
-    <!-- Genera 1 a 10 -->
-    <!-- Usa un bucle si deseas generarlo con JS -->
-
-    <!-- Aquí muestro solo 10 por espacio -->
-    <!-- Puedes generar más fácilmente si lo necesitas -->
-
-    <!-- Puedes reemplazar este bloque por JavaScript si lo quieres dinámico -->
-
-    <!-- ↓↓ INICIO FILAS ↓↓ -->
-    <!-- Puedes copiar/pegar desde aquí para más filas -->
-    <!-- Aquí solo dejo 10 por brevedad -->
-    <!-- Cambia `10` por `50` si lo deseas completo -->
-
-    <!-- Generador de filas en HTML plano -->
-    <!-- Cada celda editable excepto el número -->
-
-    <!-- Fila 1 a 10 -->
-    <!-- Puedes copiar más filas si lo deseas -->
-    <!-- Si quieres te doy la versión con JavaScript -->
-
-    <!-- Fila ejemplo -->
-    <!-- Repite según lo necesites -->
-    <!-- O dime y te doy con JS -->
-    <!-- Generamos 50 si gustas -->
-
-    <!-- Aquí van filas generadas -->
-    <!-- Vamos con un ejemplo hasta la 10 -->
-    <!-- Luego puedes duplicar -->
-    <!-- Comenzamos -->
-
-    <!-- FILA GENERADA -->
-    <!-- Aquí usamos JavaScript embebido -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const tbody = document.querySelector("tbody");
-        for (let i = 1; i <= 50; i++) {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${i}</td>
-            <td contenteditable="true"></td>
-            ${Array(13).fill(`<td contenteditable="true">0</td>`).join("")}
-            <td contenteditable="true"></td>
-          `;
-          tbody.appendChild(row);
-        }
-      });
-    </script>
-
-  </tbody>
-</table>
+    // Agrega 10 filas al cargar
+    document.addEventListener("DOMContentLoaded", () => {
+      for (let i = 1; i <= 10; i++) agregarFila();
+    });
+  </script>
 
 </body>
 </html>

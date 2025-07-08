@@ -33,45 +33,34 @@
       margin: 5px 0;
     }
 
-    .scroll-container {
-      display: flex;
-      overflow-x: auto;
-      border-top: 4px solid #00333a;
-      padding: 10px;
-    }
-
-    table {
-      border-collapse: collapse;
-      margin: 10px;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 6px;
-      text-align: center;
-      min-width: 100px;
-    }
-
-    th {
-      background-color: #00333a;
-      color: white;
-    }
-
-    textarea {
-      resize: horizontal;
-      min-width: 120px;
-      height: 100%;
-    }
-
-    .day-cell {
-      min-width: 40px;
-      cursor: pointer;
-    }
-
-    .color-picker, .calendar-controls, .bottom-buttons, .legend {
+    .calendar-controls,
+    .legend,
+    .color-picker,
+    .bottom-buttons {
       text-align: center;
       margin-top: 10px;
     }
+
+    select {
+      padding: 5px;
+      border-radius: 5px;
+      margin: 0 5px;
+    }
+
+    .legend span {
+      display: inline-block;
+      margin: 0 5px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .vacaciones { background-color: lightblue; color: black; }
+    .descanso { background-color: red; }
+    .nolaboral { background-color: gold; color: black; }
+    .concluida { background-color: green; }
+    .seguimiento { background-color: orange; }
 
     .color-button {
       width: 30px;
@@ -83,11 +72,75 @@
       border-radius: 5px;
     }
 
-    .vacaciones { background-color: lightblue; color: black; }
-    .descanso { background-color: red; }
-    .nolaboral { background-color: gold; color: black; }
-    .concluida { background-color: green; }
-    .seguimiento { background-color: orange; }
+    .scroll-container {
+      display: flex;
+      overflow-x: auto;
+      border-top: 4px solid #00333a;
+      padding: 10px;
+      align-items: flex-start;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin-right: 10px;
+    }
+
+    #actividadTable th, #actividadTable td {
+      border: 1px solid #ccc;
+      padding: 4px 6px;
+      min-width: 120px;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    #actividadTable textarea {
+  height: 30px;
+  resize: none;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 12px;
+  box-sizing: border-box;
+  padding: 4px;
+    }
+
+    #calendarTable {
+  table-layout: fixed;
+  max-width: 100%;
+  overflow: auto;
+}
+
+    thead.calendar-header th {
+      background-color: #660021;
+      color: white;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      font-size: 12px;
+      text-align: center;
+      border: 1px solid #ccc;
+    }
+
+    thead.calendar-header th:first-child,
+    tbody.calendar-body td:first-child {
+  width: 30px;
+  min-width: 30px;
+  max-width: 30px;
+    }
+
+    tbody.calendar-body td {
+      border: 1px solid #ccc;
+  width: 30px;
+  min-width: 30px;
+  max-width: 30px;
+  padding: 0;
+  text-align: center;
+  font-size: 12px;
+  box-sizing: border-box;
+    }
+
+    tbody.calendar-body td[contenteditable="true"]:focus {
+      outline: 2px solid #00333a;
+    }
 
     .button {
       background-color: #660021;
@@ -99,175 +152,126 @@
       cursor: pointer;
       margin: 5px;
     }
-
-    select {
-      padding: 5px;
-      border-radius: 5px;
-      margin: 0 5px;
-    }
   </style>
 </head>
 <body>
+  <header>
+    <div class="header-left">
+      <a href="../index.html" title="Regresar">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+          <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <img src="img/chapul.png" alt="Chapulhuacán" class="header-logo" />
+    </div>
+    <div class="header-center">
+      <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
+      <h2>Área: Planeación Municipal</h2>
+    </div>
+    <div class="header-right">
+      <img src="img/planeacion.png" alt="Planeación" class="header-logo" />
+    </div>
+  </header>
 
-<header>
-  <div class="header-left">
-    <a href="../index.html" title="Regresar">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
-        <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </a>
-    <img src="img/chapul.png" alt="Chapulhuacán" class="header-logo" />
+  <div class="calendar-controls">
+    <label>Mes:
+      <select id="month"></select>
+    </label>
+    <label>Año:
+      <select id="year"></select>
+    </label>
   </div>
-  <div class="header-center">
-    <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
-    <h2>Área: Planeación Municipal</h2>
+
+  <div class="legend">
+    <span class="vacaciones">Vacaciones</span>
+    <span class="descanso">Descanso</span>
+    <span class="nolaboral">No laboral</span>
+    <span class="concluida">Concluida</span>
+    <span class="seguimiento">Seguimiento</span>
   </div>
-  <div class="header-right">
-    <img src="img/planeacion.png" alt="Planeación" class="header-logo" />
+
+  <div class="color-picker">
+    <div class="color-button vacaciones" onclick="seleccionarColor('lightblue')"></div>
+    <div class="color-button descanso" onclick="seleccionarColor('red')"></div>
+    <div class="color-button nolaboral" onclick="seleccionarColor('gold')"></div>
+    <div class="color-button concluida" onclick="seleccionarColor('green')"></div>
+    <div class="color-button seguimiento" onclick="seleccionarColor('orange')"></div>
   </div>
-</header>
 
-<div class="calendar-controls">
-  <label>Mes:
-    <select id="month"></select>
-  </label>
-  <label>Año:
-    <select id="year"></select>
-  </label>
-</div>
+  <div class="scroll-container">
+    <table id="actividadTable">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Actividad</th>
+          <th>Acuerdo</th>
+          <th>Objetivo</th>
+          <th>Estrategia</th>
+          <th>Línea de Acción</th>
+        </tr>
+      </thead>
+      <tbody id="actividadBody"></tbody>
+    </table>
 
-<div class="legend">
-  <span class="vacaciones">Vacaciones</span>
-  <span class="descanso">Descanso</span>
-  <span class="nolaboral">No laboral</span>
-  <span class="concluida">Concluida</span>
-  <span class="seguimiento">Seguimiento</span>
-</div>
+    <table id="calendarTable">
+      <thead id="calendarHeader" class="calendar-header">
+        <tr>
+          <th>Día</th>
+        </tr>
+      </thead>
+      <tbody id="calendarBody" class="calendar-body"></tbody>
+    </table>
+  </div>
 
-<div class="color-picker">
-  <div class="color-button vacaciones" onclick="seleccionarColor('lightblue')"></div>
-  <div class="color-button descanso" onclick="seleccionarColor('red')"></div>
-  <div class="color-button nolaboral" onclick="seleccionarColor('gold')"></div>
-  <div class="color-button concluida" onclick="seleccionarColor('green')"></div>
-  <div class="color-button seguimiento" onclick="seleccionarColor('orange')"></div>
-</div>
+  <div class="bottom-buttons">
+    <button onclick="addRow()" class="button">➕ Agregar Actividad</button>
+    <button onclick="deleteRow()" class="button">🗑️ Eliminar Actividad</button>
+    <button onclick="window.location.href='evidencias.html'" class="button">📤 Subir Evidencia</button>
+    <button onclick="exportarExcel()" class="button">📥 Exportar Excel</button>
+  </div>
 
-<div class="scroll-container">
-  <table id="actividadTable">
-    <thead>
-      <tr>
-        <th>No.</th>
-        <th>Actividad</th>
-        <th>Acuerdo</th>
-        <th>Objetivo</th>
-        <th>Estrategia</th>
-        <th>Línea de Acción</th>
-      </tr>
-    </thead>
-    <tbody id="actividadBody"></tbody>
-  </table>
+  <!-- Librería SheetJS para exportar Excel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-  <table id="calendarTable">
-    <thead>
-      <tr id="calendarHeader">
-        <th>Día</th>
-      </tr>
-    </thead>
-    <tbody id="calendarBody"></tbody>
-  </table>
-</div>
+  <script>
+    let colorSeleccionado = "";
+    let diasDelMes = [];
 
-<div class="bottom-buttons">
-  <button onclick="addRow()" class="button">➕Agregar Actividad</button>
-  <button onclick="deleteRow()" class="button">🗑️​Eliminar Actividad</button>
-  <button onclick="window.location.href='evidencias.html'" class="button">📤 Subir Evidencia</button>
-</div>
-
-<script>
-  let colorSeleccionado = "";
-  let diasDelMes = [];
-
-  function seleccionarColor(color) {
-    colorSeleccionado = color;
-  }
-
-  function pintarCelda(celda) {
-    if (colorSeleccionado) {
-      celda.style.backgroundColor = colorSeleccionado;
-    }
-  }
-
-  function autoExpand(textarea) {
-    textarea.style.width = 'auto';
-    textarea.style.width = textarea.scrollWidth + "px";
-  }
-
-  function addRow() {
-    const actBody = document.getElementById("actividadBody");
-    const calBody = document.getElementById("calendarBody");
-    const index = actBody.rows.length + 1;
-
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${index}</td>
-      <td><textarea oninput="autoExpand(this)" placeholder="Actividad"></textarea></td>
-      <td><textarea oninput="autoExpand(this)" placeholder="Acuerdo"></textarea></td>
-      <td><textarea oninput="autoExpand(this)" placeholder="Objetivo"></textarea></td>
-      <td><textarea oninput="autoExpand(this)" placeholder="Estrategia"></textarea></td>
-      <td><textarea oninput="autoExpand(this)" placeholder="Línea de Acción"></textarea></td>
-    `;
-    actBody.appendChild(row);
-
-    const calRow = document.createElement("tr");
-    const tdTitulo = document.createElement("td");
-    tdTitulo.textContent = `Act. ${index}`;
-    calRow.appendChild(tdTitulo);
-
-    diasDelMes.forEach(() => {
-      const td = document.createElement("td");
-      td.classList.add("day-cell");
-      td.contentEditable = true;
-      td.onclick = () => pintarCelda(td);
-      calRow.appendChild(td);
-    });
-
-    calBody.appendChild(calRow);
-  }
-
-  function deleteRow() {
-    const actBody = document.getElementById("actividadBody");
-    const calBody = document.getElementById("calendarBody");
-    if (actBody.rows.length > 0) {
-      actBody.deleteRow(actBody.rows.length - 1);
-      calBody.deleteRow(calBody.rows.length - 1);
-    }
-  }
-
-  function subirEvidencia() {
-    alert("Función de subir evidencia no implementada.");
-  }
-
-  function crearDiasCalendario(mes, anio) {
-    const header = document.getElementById("calendarHeader");
-    const calBody = document.getElementById("calendarBody");
-    const actBody = document.getElementById("actividadBody");
-
-    header.innerHTML = "<th>Día</th>";
-    diasDelMes = [];
-
-    const numDias = new Date(anio, mes + 1, 0).getDate();
-    for (let i = 1; i <= numDias; i++) {
-      const th = document.createElement("th");
-      th.textContent = i;
-      header.appendChild(th);
-      diasDelMes.push(i);
+    function seleccionarColor(color) {
+      colorSeleccionado = color;
     }
 
-    calBody.innerHTML = "";
-    for (let i = 0; i < actBody.rows.length; i++) {
+    function pintarCelda(celda) {
+      if (colorSeleccionado) {
+        celda.style.backgroundColor = colorSeleccionado;
+      }
+    }
+
+function autoExpandHorizontal(textarea) {
+  textarea.style.width = 'auto';
+  textarea.style.width = (textarea.scrollWidth + 2) + 'px';
+}
+
+
+    function addRow() {
+      const actBody = document.getElementById("actividadBody");
+      const calBody = document.getElementById("calendarBody");
+      const index = actBody.rows.length + 1;
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index}</td>
+    <td><textarea oninput="autoExpandHorizontal(this)" placeholder="Actividad"></textarea></td>
+    <td><textarea oninput="autoExpandHorizontal(this)" placeholder="Acuerdo"></textarea></td>
+    <td><textarea oninput="autoExpandHorizontal(this)" placeholder="Objetivo"></textarea></td>
+    <td><textarea oninput="autoExpandHorizontal(this)" placeholder="Estrategia"></textarea></td>
+    <td><textarea oninput="autoExpandHorizontal(this)" placeholder="Línea de Acción"></textarea></td>
+      `;
+      actBody.appendChild(row);
+
       const calRow = document.createElement("tr");
       const tdTitulo = document.createElement("td");
-      tdTitulo.textContent = `Act. ${i + 1}`;
+      tdTitulo.textContent = `Act. ${index}`;
       calRow.appendChild(tdTitulo);
 
       diasDelMes.forEach(() => {
@@ -280,36 +284,116 @@
 
       calBody.appendChild(calRow);
     }
-  }
 
-  function initMonthYear() {
-    const mesSelect = document.getElementById("month");
-    const yearSelect = document.getElementById("year");
-
-    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-
-    meses.forEach((m, i) => mesSelect.appendChild(new Option(m, i)));
-
-    const anioActual = new Date().getFullYear();
-    for (let y = anioActual - 3; y <= anioActual + 3; y++) {
-      yearSelect.appendChild(new Option(y, y));
+    function deleteRow() {
+      const actBody = document.getElementById("actividadBody");
+      const calBody = document.getElementById("calendarBody");
+      if (actBody.rows.length > 0) {
+        actBody.deleteRow(actBody.rows.length - 1);
+        calBody.deleteRow(calBody.rows.length - 1);
+      }
     }
 
-    mesSelect.value = new Date().getMonth();
-    yearSelect.value = anioActual;
+    function crearDiasCalendario(mes, anio) {
+      const header = document.getElementById("calendarHeader");
+      const calBody = document.getElementById("calendarBody");
+      const actBody = document.getElementById("actividadBody");
 
-    mesSelect.onchange = () => crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
-    yearSelect.onchange = () => crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
+      header.innerHTML = "<tr><th>Día</th></tr>";
+      diasDelMes = [];
 
-    crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
+      const numDias = new Date(anio, mes + 1, 0).getDate();
+      for (let i = 1; i <= numDias; i++) {
+        const th = document.createElement("th");
+        th.textContent = i;
+        header.querySelector("tr").appendChild(th);
+        diasDelMes.push(i);
+      }
+
+      calBody.innerHTML = "";
+      for (let i = 0; i < actBody.rows.length; i++) {
+        const calRow = document.createElement("tr");
+        const tdTitulo = document.createElement("td");
+        tdTitulo.textContent = `Act. ${i + 1}`;
+        calRow.appendChild(tdTitulo);
+
+        diasDelMes.forEach(() => {
+          const td = document.createElement("td");
+          td.classList.add("day-cell");
+          td.contentEditable = true;
+          td.onclick = () => pintarCelda(td);
+          calRow.appendChild(td);
+        });
+
+        calBody.appendChild(calRow);
+      }
+    }
+
+    function initMonthYear() {
+      const mesSelect = document.getElementById("month");
+      const yearSelect = document.getElementById("year");
+
+      const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+      meses.forEach((m, i) => mesSelect.appendChild(new Option(m, i)));
+
+      const anioActual = new Date().getFullYear();
+      for (let y = anioActual - 3; y <= anioActual + 3; y++) {
+        yearSelect.appendChild(new Option(y, y));
+      }
+
+      mesSelect.value = new Date().getMonth();
+      yearSelect.value = anioActual;
+
+      mesSelect.onchange = () => crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
+      yearSelect.onchange = () => crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
+
+      crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
+    }
+
+    function exportarExcel() {
+      const wb = XLSX.utils.book_new();
+      const ws1 = XLSX.utils.table_to_sheet(document.getElementById("actividadTable"));
+      const ws2 = XLSX.utils.table_to_sheet(document.getElementById("calendarTable"));
+      XLSX.utils.book_append_sheet(wb, ws1, "Actividades");
+      XLSX.utils.book_append_sheet(wb, ws2, "Calendario");
+      XLSX.writeFile(wb, "POA_Actividades.xlsx");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initMonthYear();
+      addRow();
+
+      
+    });
+<!-- Fragmento del Plan de Actividades (agregar al final del script existente) -->
+  function guardarActividades() {
+    const actividades = [];
+    const filas = document.querySelectorAll("#actividadBody tr");
+
+    filas.forEach(fila => {
+      const celdas = fila.querySelectorAll("textarea");
+      if (celdas.length > 0) {
+        actividades.push({
+          actividad: celdas[0].value,
+          acuerdo: celdas[1].value,
+          objetivo: celdas[2].value,
+          estrategia: celdas[3].value,
+          linea: celdas[4].value
+        });
+      }
+    });
+
+    localStorage.setItem("actividadesPOA", JSON.stringify(actividades));
+    alert("✅ Actividades guardadas correctamente.");
   }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    initMonthYear();
-    addRow();
-  });
 </script>
 
+<!-- Botón para guardar -->
+<button onclick="guardarActividades()" class="button">💾 Guardar Actividades</button>
+
+    
+  </script>
 </body>
 </html>

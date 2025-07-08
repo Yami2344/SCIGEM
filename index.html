@@ -12,33 +12,62 @@
 
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: white;
+      background-color: #f9f9f9;
       margin: 0;
       padding: 0;
     }
 
-    .grid-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
+    header {
+      background-color: #00333a;
+      color: white;
       padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
     }
 
-    .button {
-      background-color: #660021;
-      color: white;
-      border: none;
-      padding: 15px 20px;
-      font-weight: bold;
-      font-size: 14px;
-      border-radius: 5px;
-      cursor: pointer;
-      min-width: 200px;
-      text-decoration: none;
-      display: inline-block;
-    }
+   .contenedor-botones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 30px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.button {
+  display: block;
+  padding: 12px 24px;
+  background-color: #00333a;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  width: 220px;
+  text-align: center;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #660021;
+}
+
+.logout-button {
+  background-color: #660021;
+  border: none;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #a00030;
+}
+    
 
     .evaluaciones {
       display: flex;
@@ -129,25 +158,21 @@
 </header>
 
 <!-- BOTONES PRINCIPALES -->
-<div class="grid-container">
-  <a href="user/Plandeactividades.html" class="button">PLAN DE ACTIVIDADES</a>
-  <a href="user/Planpresupuestal.html" class="button">PLAN PRESUPUESTAL</a>
-  <a href="Alineacion PMD.html" class="button">ALINEACIÓN PMD</a>
-  <a href="user/Imagenes.html" class="button">IMAGENES</a>
-  <a href="user/indicadores.html" class="button">INDICADORES</a>
+<!-- CONTENEDOR DE BOTONES Y CIERRE DE SESIÓN -->
+<div class="contenedor-botones">
+  <div class="grid-container">
+    <a href="user/Plandeactividades.html" class="button">PLAN DE ACTIVIDADES</a>
+    <a href="user/Planpresupuestal.html" class="button">PLAN PRESUPUESTAL</a>
+    <a href="Alineacion PMD.html" class="button">ALINEACIÓN PMD</a>
+    <a href="user/Imagenes.html" class="button">IMÁGENES</a>
+    <a href="user/indicadores.html" class="button">INDICADORES</a>
+    <a href="user/evaluacioninterna.html" class="button">EVALUACIÓN INTERNA</a>
+    <a href="admin/admin_index.html" class="button">ADMINISTRACIÓN</a>
+  </div>
 
+  <button onclick="logout()" class="button logout-button">CERRAR SESIÓN</button>
 </div>
-
-<!-- BOTÓN DE CIERRE DE SESIÓN -->
-<div style="margin-top: 20px;">
-  <button onclick="logout()" class="logout-btn">Cerrar sesión</button>
-</div>
-
-<!-- BOTONES GUARDAR Y ENVIAR -->
-<div class="grid-container">
-  <button class="button" onclick="guardar()">GUARDAR</button>
-  <button class="button" onclick="enviar()">ENVIAR</button>
-</div>
+<!-- SCRIPT DE CIERRE DE SESIÓN -->
 
 <!-- CHATBOT DIALOGFLOW -->
 <div id="chat-box" style="display:none; position:fixed; bottom:80px; right:20px; z-index:999;">

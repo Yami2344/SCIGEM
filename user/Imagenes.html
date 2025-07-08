@@ -12,20 +12,6 @@
       padding: 0;
     }
 
-    h1, h2 {
-      color: white;
-      margin: 0;
-    }
-
-    .evidence-form {
-      max-width: 1000px;
-      margin: 30px auto;
-      padding: 20px;
-      border: 2px solid #660021;
-      border-radius: 10px;
-      background-color: #f9f9f9;
-    }
-
     header {
       background: linear-gradient(90deg, #660021, #00333a);
       display: flex;
@@ -33,6 +19,7 @@
       justify-content: space-between;
       padding: 15px 20px;
       flex-wrap: wrap;
+      color: white;
     }
 
     .header-logo {
@@ -59,60 +46,46 @@
       text-align: center;
     }
 
-    .icon-button {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      margin-left: 10px;
+    h1, h2 {
+      margin: 0;
+      color: white;
     }
 
     h3 {
       color: #00333a;
-      text-align: center;
-      margin-top: 0;
+      margin-bottom: 5px;
     }
 
-    .upload-section {
-      text-align: center;
-      margin-top: 20px;
+    .actividad {
+      border: 2px solid #660021;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      padding: 15px;
+      margin: 20px auto;
+      max-width: 900px;
+    }
+
+    .actividad p {
+      margin: 5px 0;
     }
 
     input[type="file"] {
       margin-top: 10px;
     }
 
-    #previewContainer {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
     .preview-img {
-      width: 120px;
-      height: 120px;
+      width: 150px;
+      height: 150px;
       object-fit: cover;
       border: 1px solid #ccc;
       border-radius: 5px;
-    }
-
-    .btn-save {
-      display: block;
-      margin: 30px auto 10px;
-      padding: 10px 20px;
-      background-color: #660021;
-      color: white;
-      font-weight: bold;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ENCABEZADO -->
 <header>
   <div class="header-left">
     <a href="../index.html" title="Regresar">
@@ -130,53 +103,48 @@
 
   <div class="header-right">
     <img src="img/planeacion.png" alt="Planeación" class="header-logo" />
-    <button class="icon-button" title="Notificaciones">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
-        <path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6v-5a6 6 0 0 0-5-5.91V5a1 1 0 1 0-2 0v.09A6 6 0 0 0 6 11v5l-2 2v1h16v-1l-2-2z"/>
-      </svg>
-    </button>
-    <button class="icon-button" title="Chat">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
-        <path d="M4 4h16v12H5.17L4 17.17V4zM2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
-      </svg>
-    </button>
   </div>
 </header>
 
-<!-- CONTENIDO PRINCIPAL -->
-<div class="evidence-form">
-  <h3>Subir imágenes de evidencia</h3>
-
-  <div class="upload-section">
-    <input type="file" id="imageUploader" multiple accept="image/*" onchange="previewMultipleImages(event)">
-  </div>
-
-  <div id="previewContainer"></div>
-
-  <button class="btn-save" onclick="guardarImagenes()">Guardar imágenes</button>
-</div>
+<!-- CONTENIDO -->
+<main>
+  <h2 style="text-align: center; color: #00333a; margin-top: 30px;">📷 Evidencias de Actividades</h2>
+  <div id="contenedorActividades"></div>
+</main>
 
 <script>
-  function previewMultipleImages(event) {
-    const files = event.target.files;
-    const previewContainer = document.getElementById("previewContainer");
-    previewContainer.innerHTML = "";
+  document.addEventListener("DOMContentLoaded", () => {
+    const actividades = JSON.parse(localStorage.getItem("actividadesPOA")) || [];
+    const contenedor = document.getElementById("contenedorActividades");
 
-    Array.from(files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = document.createElement("img");
-        img.src = e.target.result;
-        img.className = "preview-img";
-        previewContainer.appendChild(img);
-      };
-      reader.readAsDataURL(file);
+    if (actividades.length === 0) {
+      contenedor.innerHTML = "<p style='text-align:center; color: #660021;'>⚠️ No hay actividades guardadas aún.</p>";
+      return;
+    }
+
+    actividades.forEach((act, index) => {
+      const div = document.createElement("div");
+      div.className = "actividad";
+      div.innerHTML = `
+        <h3>Actividad ${index + 1}: ${act.actividad || "(Sin título)"}</h3>
+        <p><strong>Línea de Acción:</strong> ${act.linea || "No especificada"}</p>
+        <label>📤 Subir evidencia:</label><br>
+        <input type="file" accept="image/*" onchange="mostrarPreview(this, 'img${index}')"><br>
+        <img id="img${index}" class="preview-img" src="" alt="Vista previa">
+      `;
+      contenedor.appendChild(div);
     });
-  }
+  });
 
-  function guardarImagenes() {
-    alert("🔒 Esta función requiere configuración de servidor para guardar los archivos.");
-    // Aquí se enviaría el formulario a PHP o se usaría Firebase/FTP/AJAX
+  function mostrarPreview(input, idImg) {
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      document.getElementById(idImg).src = e.target.result;
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   }
 </script>
 

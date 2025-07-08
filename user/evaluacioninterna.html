@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Evaluación de Funcionarios</title>
+   <link rel="stylesheet" href="css/estilos.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #00333a;
+      color: white;
+      padding: 15px;
+    }
+
+    .header-left, .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo {
+      height: 50px;
+    }
+
+    .header-center {
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    .header-center h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .header-center h2 {
+      margin: 5px 0 0 0;
+      font-size: 16px;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 850px;
+      background-color: #fff;
+      padding: 25px 30px;
+      margin: 30px auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(102, 0, 33, 0.2);
+    }
+
+    h2 {
+      color: #00333a;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      table-layout: fixed;
+    }
+
+    th, td {
+      border: 1px solid #999;
+      padding: 6px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #660021;
+      color: white;
+    }
+
+    td[contenteditable="true"]:focus {
+      outline: 2px solid #00333a;
+    }
+
+    .text-left {
+      text-align: left;
+    }
+
+    .button-container {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .btn {
+      background-color: #00333a;
+      color: white;
+      padding: 8px 16px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #660021;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <a href="../index.html" title="Regresar">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <img src="img/chapul.png" alt="Chapulhuacán" class="header-logo" />
+  </div>
+  <div class="header-center">
+    <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
+    <h2>Evaluación de Funcionarios</h2>
+  </div>
+  <div class="header-right">
+    <img src="img/planeacion.png" alt="Planeación" class="header-logo" />
+  </div>
+</header>
+
+<!-- CONTENIDO -->
+<div class="container">
+  <h2>Titular del área</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 10%;">Nº</th>
+        <th style="width: 65%;">Nombre del Funcionario</th>
+        <th style="width: 25%;">Porcentaje de Cumplimiento</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-body">
+      <!-- Se agregan filas dinámicamente -->
+    </tbody>
+  </table>
+
+  <div class="button-container">
+    <button class="btn" onclick="agregarFila()">➕ Agregar Fila</button>
+    <button class="btn" onclick="eliminarFila()">🗑️ Eliminar Fila</button>
+  </div>
+</div>
+
+<script>
+  const tbody = document.getElementById('tabla-body');
+
+  for (let i = 1; i <= 10; i++) agregarFila();
+
+  function agregarFila() {
+    const rowCount = tbody.rows.length + 1;
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${rowCount}</td>
+      <td contenteditable="true" class="text-left"></td>
+      <td contenteditable="true" oninput="formatearPorcentaje(this)"></td>
+    `;
+    tbody.appendChild(row);
+  }
+
+  function eliminarFila() {
+    if (tbody.rows.length > 0) {
+      tbody.deleteRow(tbody.rows.length - 1);
+    }
+  }
+
+  function formatearPorcentaje(cell) {
+    let valor = cell.innerText.replace(/[^0-9.]/g, '');
+    if (valor !== '') {
+      valor = parseFloat(valor);
+      if (!isNaN(valor)) {
+        if (valor > 100) valor = 100;
+        cell.innerText = valor + '%';
+      }
+    } else {
+      cell.innerText = '';
+    }
+
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.selectNodeContents(cell);
+    range.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+</script>
+
+</body>
+</html>

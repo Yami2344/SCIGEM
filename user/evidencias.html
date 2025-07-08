@@ -156,40 +156,52 @@
 </div>
 
 <script>
+  // Recuperar actividades y evidencias guardadas (base64)
   const actividades = JSON.parse(localStorage.getItem("actividadesPOA")) || [];
+  const evidencias = JSON.parse(localStorage.getItem("evidenciasPOA")) || {};
+
   const tableBody = document.getElementById("evidenceTableBody");
+
+  function crearFila(index, actividad, imgData) {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${actividad}</td>
+      <td>
+        <input type="file" accept="image/*" onchange="previewImage(event, ${index})" />
+      </td>
+      <td>
+        <img id="preview-${index}" src="${imgData || ''}" alt="Vista previa" style="${imgData ? 'display:block;' : 'display:none;'}" />
+      </td>
+    `;
+    tableBody.appendChild(row);
+  }
 
   if (actividades.length === 0) {
     document.getElementById("evidenceContainer").innerHTML += 
       "<p class='warning'>⚠️ Aún no se han registrado actividades.</p>";
   } else {
     actividades.forEach((actividad, index) => {
-      const row = document.createElement("tr");
-
-      row.innerHTML = `
-        <td>${index + 1}</td>
-        <td>${actividad}</td>
-        <td>
-          <input type="file" accept="image/*" onchange="previewImage(event, ${index})" />
-        </td>
-        <td>
-          <img id="preview-${index}" src="" alt="Vista previa" style="display: none;" />
-        </td>
-      `;
-
-      tableBody.appendChild(row);
+      const imgData = evidencias[index] || '';
+      crearFila(index, actividad, imgData);
     });
   }
 
+  // Función global para poder acceder desde el onchange inline
   function previewImage(event, index) {
     const file = event.target.files[0];
     const preview = document.getElementById(`preview-${index}`);
-    
+
     if (file) {
       const reader = new FileReader();
       reader.onload = function(e) {
         preview.src = e.target.result;
         preview.style.display = "block";
+
+        // Guardar en localStorage la imagen base64 por índice
+        evidencias[index] = e.target.result;
+        localStorage.setItem("evidenciasPOA", JSON.stringify(evidencias));
       };
       reader.readAsDataURL(file);
     }

@@ -59,20 +59,50 @@
       color: white;
     }
 
-    textarea {
-      resize: horizontal;
-      min-width: 120px;
-      height: 100%;
+    #calendarTable thead th {
+      background-color: #660021;
+      color: white;
+      padding: 6px;
+      font-size: 12px;
+      border: 1px solid #ccc;
+      width: 30px;
+      min-width: 30px;
+      max-width: 30px;
+      height: 30px;
+    }
+
+    #calendarTable tbody td {
+      border: 1px solid #ccc;
+      width: 30px;
+      min-width: 30px;
+      max-width: 30px;
+      height: 30px;
+      padding: 0;
+      text-align: center;
+      font-size: 12px;
+      box-sizing: border-box;
+    }
+
+    #calendarTable tbody td:first-child {
+      min-width: 70px;
+      font-weight: bold;
+      background-color: #f9f9f9;
+    }
+
+    #calendarTable {
+      table-layout: fixed;
+      border-collapse: collapse;
     }
 
     .day-cell {
-      width: 25px;
-      height: 25px;
+      width: 30px;
+      height: 30px;
+      font-size: 12px;
       padding: 0;
-      font-size: 10px;
-      cursor: pointer;
+      text-align: center;
       overflow: hidden;
       white-space: nowrap;
+      border: 1px solid #ccc;
     }
 
     .calendar-controls, .bottom-buttons, .legend {
@@ -95,10 +125,6 @@
       padding: 5px;
       border-radius: 5px;
       margin: 0 5px;
-    }
-
-    .subtotal {
-      background-color: #f0f0f0;
     }
 
     .color-button {
@@ -139,12 +165,8 @@
 </header>
 
 <div class="calendar-controls">
-  <label>Mes:
-    <select id="month"></select>
-  </label>
-  <label>Año:
-    <select id="year"></select>
-  </label>
+  <label>Mes: <select id="month"></select></label>
+  <label>Año: <select id="year"></select></label>
 </div>
 
 <div class="legend">
@@ -166,28 +188,14 @@
 <div class="scroll-container">
   <table id="actividadTable">
     <thead>
-      <tr>
-        <th>No.</th>
-        <th>Descripción</th>
-        <th>Partida Presupuestal</th>
-        <th>Acuerdo</th>
-        <th>Objetivo</th>
-        <th>Estrategia</th>
-        <th>Línea de Acción</th>
-        <th>Unidad de Medida</th>
-        <th>Cantidad</th>
-        <th>Precio Unitario</th>
-        <th>Subtotal</th>
-      </tr>
+      <tr id="actividadHeader"></tr>
     </thead>
     <tbody id="actividadBody"></tbody>
   </table>
 
   <table id="calendarTable">
     <thead>
-      <tr id="calendarHeader">
-        <th>Día</th>
-      </tr>
+      <tr id="calendarHeader"><th>Día</th></tr>
     </thead>
     <tbody id="calendarBody"></tbody>
   </table>
@@ -196,10 +204,18 @@
 <div class="bottom-buttons">
   <button onclick="addRow()" class="button">➕ Agregar Actividad</button>
   <button onclick="deleteRow()" class="button">🗑️ Eliminar Actividad</button>
-  <button onclick="window.location.href='evidencias.html'" class="button">📤 Subir Evidencia</button>
 </div>
 
 <script>
+  const encabezados = [
+    "No. DE REQUERIMIENTO", "Fecha de Recibo", "¿Programado en el POA?",
+    "Mes de Realización", "Partida Presupuestal", "Acuerdo", "Objetivo",
+    "Estrategia", "Cantidad", "Línea de Acción", "ODS", "Proveedor",
+    "Unidad de Medida", "Cantidad 2", "Concepto", "Precio Unitario",
+    "Importe", "¿Desglosar I.V.A?", "I.V.A", "Otros cargos/impuestos",
+    "Descuento sobre I.V.A", "Retenciones", "Total"
+  ];
+
   let colorSeleccionado = "";
   let diasDelMes = [];
 
@@ -213,12 +229,17 @@
     }
   }
 
-  function calcularSubtotal(elemento) {
-    const fila = elemento.closest("tr");
-    const cantidad = parseFloat(fila.children[8].innerText) || 0;
-    const precio = parseFloat(fila.children[9].innerText) || 0;
+  function calcularImportes(row) {
+    const cantidad = parseFloat(row.children[13].innerText) || 0;
+    const precio = parseFloat(row.children[15].innerText) || 0;
+    const ivaDesglosado = row.children[17].querySelector("select").value === "Sí";
+    const iva = ivaDesglosado ? cantidad * precio * 0.16 : 0;
     const subtotal = cantidad * precio;
-    fila.children[10].innerText = subtotal.toFixed(2);
+    const total = subtotal + iva;
+
+    row.children[16].innerText = subtotal.toFixed(2);
+    row.children[18].innerText = iva.toFixed(2);
+    row.children[22].innerText = total.toFixed(2);
   }
 
   function addRow() {
@@ -227,19 +248,26 @@
     const index = actBody.rows.length + 1;
 
     const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${index}</td>
-      <td contenteditable="true"></td>
-      <td contenteditable="true"></td>
-      <td contenteditable="true"></td>
-      <td contenteditable="true"></td>
-      <td contenteditable="true"></td>
-      <td contenteditable="true"></td>
-      <td contenteditable="true"></td>
-      <td contenteditable="true" oninput="calcularSubtotal(this)"></td>
-      <td contenteditable="true" oninput="calcularSubtotal(this)"></td>
-      <td class="subtotal">0</td>
-    `;
+    encabezados.forEach((header, i) => {
+      const td = document.createElement("td");
+      if (i === 17) {
+        const select = document.createElement("select");
+        ["Sí", "No"].forEach(opt => {
+          const option = document.createElement("option");
+          option.value = opt;
+          option.textContent = opt;
+          select.appendChild(option);
+        });
+        select.onchange = () => calcularImportes(row);
+        td.appendChild(select);
+      } else if ([13, 15].includes(i)) {
+        td.contentEditable = true;
+        td.oninput = () => calcularImportes(row);
+      } else {
+        td.contentEditable = true;
+      }
+      row.appendChild(td);
+    });
     actBody.appendChild(row);
 
     const calRow = document.createElement("tr");
@@ -326,6 +354,12 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    const headerRow = document.getElementById("actividadHeader");
+    encabezados.forEach(t => {
+      const th = document.createElement("th");
+      th.textContent = t;
+      headerRow.appendChild(th);
+    });
     initMonthYear();
     addRow();
   });

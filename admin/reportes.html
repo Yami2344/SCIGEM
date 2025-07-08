@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Reportes - Administrador</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Panel Presupuestal por Departamento</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * { box-sizing: border-box; }
     body {
@@ -36,6 +36,31 @@
       margin: 0;
     }
 
+    .filtros {
+      text-align: center;
+      margin: 20px;
+    }
+
+    .filtros select,
+    .filtros button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 6px;
+    }
+
+    .filtros button {
+      background-color: #660021;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .filtros button:hover {
+      background-color: #ffcc00;
+      color: #00333a;
+    }
+
     .contenedor {
       display: flex;
       flex-wrap: wrap;
@@ -62,271 +87,122 @@
       text-align: center;
     }
 
-    .apartado a {
-      display: block;
+    .apartado .reporte {
       margin: 6px 0;
-      color: #00333a;
-      font-weight: bold;
-      text-decoration: none;
-      border: 1px solid #00333a;
       padding: 6px;
+      background-color: #fff;
+      border: 1px solid #00333a;
       border-radius: 5px;
-      background-color: white;
-      transition: 0.3s;
+      text-align: center;
+      font-weight: bold;
+      color: #00333a;
     }
 
-    .apartado a:hover {
-      background-color: #e0e0e0;
+    .apartado .reporte.empty {
+      color: #999;
+      font-style: italic;
     }
   </style>
 </head>
 <body>
 
-<!-- ENCABEZADO INSTITUCIONAL -->
+<!-- ENCABEZADO -->
 <header>
   <div class="header-left">
-    <img src="img/chapul.png" alt="Chapulhuacán">
+    <img src="img/chapul.png" alt="Chapulhuacán" />
   </div>
   <div class="header-center">
     <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
-    <h2>Panel de Reportes por Departamento</h2>
+    <h2>Análisis Presupuestal por Departamento</h2>
   </div>
   <div class="header-right">
-    <img src="img/planeacion.png" alt="Planeación">
+    <img src="img/planeacion.png" alt="Planeación" />
   </div>
 </header>
 
-<!-- APARTADOS POR DEPARTAMENTO -->
-<div class="contenedor">
-  <!-- Repite este bloque cambiando el nombre del departamento y enlaces -->
-  <div class="apartado">
-    <h2>Administración</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
+<!-- FILTROS -->
+<div class="filtros">
+  <label for="mes">Mes:</label>
+  <select id="mes">
+    <option value="01">Enero</option>
+    <option value="02">Febrero</option>
+    <option value="03">Marzo</option>
+    <option value="04">Abril</option>
+    <option value="05">Mayo</option>
+    <option value="06">Junio</option>
+    <option value="07">Julio</option>
+    <option value="08">Agosto</option>
+    <option value="09">Septiembre</option>
+    <option value="10">Octubre</option>
+    <option value="11">Noviembre</option>
+    <option value="12">Diciembre</option>
+  </select>
 
-  <div class="apartado">
-    <h2>Archivo</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
+  <label for="anio">Año:</label>
+  <select id="anio">
+    <option value="2025">2025</option>
+    <option value="2024">2024</option>
+  </select>
 
-  <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-    </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-  <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-    <div class="apartado">
-    <h2>Arte y Cultura</h2>
-    <a href="#">Plan de Actividades</a>
-    <a href="#">Plan Presupuestal</a>
-    <a href="#">Alineación PMD</a>
-    <a href="#">Imágenes</a>
-  </div>
-
-  <!-- Copia este bloque para los 18 departamentos restantes -->
-  <!-- Ejemplo: Atención Ciudadana, Desarrollo Social, Deporte, Educación, Finanzas, etc. -->
-
+  <button onclick="consultarReportes()">Consultar</button>
 </div>
+
+<!-- TARJETAS DEPARTAMENTOS -->
+<div class="contenedor" id="contenedorDepartamentos">
+  <!-- Estas se generan automáticamente con JavaScript -->
+</div>
+
+<script>
+  const departamentos = [
+    "Administración", "Archivo", "Arte y Cultura", "Atención Ciudadana", "Desarrollo Económico", "Desarrollo Social",
+    "Deporte", "Derechos Humanos", "Educación", "Ecología", "Finanzas", "Gobernación", "Igualdad de Género",
+    "Juventud", "Mantenimiento", "Obras Públicas", "Participación Ciudadana", "Planeación", "Protección Civil",
+    "Salud", "Seguridad Pública"
+  ];
+
+  function crearTarjetasVacias() {
+    const contenedor = document.getElementById("contenedorDepartamentos");
+    contenedor.innerHTML = "";
+
+    departamentos.forEach(dep => {
+      const div = document.createElement("div");
+      div.className = "apartado";
+      div.innerHTML = `
+        <h2>${dep}</h2>
+        <div class="reporte empty">Plan Presupuestal: Sin registro</div>
+        <div class="reporte empty">Imágenes: Sin registro</div>
+      `;
+      contenedor.appendChild(div);
+    });
+  }
+
+  function consultarReportes() {
+    const mes = document.getElementById("mes").value;
+    const anio = document.getElementById("anio").value;
+
+    // Lógica para obtener los datos desde backend, simulada aquí
+    fetch(`backend/consultar_reportes.php?mes=${mes}&anio=${anio}`)
+      .then(res => res.json())
+      .then(data => {
+        crearTarjetasVacias();
+        data.forEach(rep => {
+          const tarjetas = document.querySelectorAll(".apartado");
+          tarjetas.forEach(tarjeta => {
+            if (tarjeta.querySelector("h2").textContent === rep.departamento) {
+              tarjeta.innerHTML = `
+                <h2>${rep.departamento}</h2>
+                <div class="reporte">Plan Presupuestal: ${rep.plan || "No disponible"}</div>
+                <div class="reporte">Imágenes: ${rep.imagenes || "No disponible"}</div>
+              `;
+            }
+          });
+        });
+      });
+  }
+
+  // Mostrar todos al cargar
+  window.onload = crearTarjetasVacias;
+</script>
 
 </body>
 </html>
