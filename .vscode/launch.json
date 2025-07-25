@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+ "version": "0.2.0",
   "configurations": [
     {
       "name": "Attach to Chrome",
@@ -12,14 +12,15 @@
       "name": "Launch Chrome (localhost)",
       "type": "chrome",
       "request": "launch",
-      "url": "http://localhost:8080",
+      "url": "http://localhost/SCIGEM/index.html",
       "webRoot": "${workspaceFolder}"
     },
     {
       "name": "Open local index.html",
       "type": "chrome",
       "request": "launch",
-      "file": "C:/Users/yamit/OneDrive/Desktop/SCIGEM/index.html"
+      "file": "C:\\xampp\\htdocs\\SCIGEM\\index.html",
+      "webRoot": "${workspaceFolder}"          
     }
   ]
 }

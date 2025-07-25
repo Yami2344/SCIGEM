@@ -2,63 +2,89 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Panel Presupuestal por Departamento</title>
+  <title>Panel Plan de Actividades por Departamento</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: Arial, sans-serif;
+    <style>
+      body {
       margin: 0;
-      background-color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f0f0;
     }
 
     header {
-      display: flex;
+      display: flex;  
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(to right, #00333a, #660021);
+      background: linear-gradient(to right, #660021, #00333a);
+      padding: 15px 30px;
       color: white;
-      padding: 10px 20px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    .header-left, .header-center, .header-right {
+      display: flex;
+      align-items: center;
     }
 
     .header-left img,
     .header-right img {
-      height: 50px;
+      height: 60px;
+      margin: 0 10px;
     }
 
     .header-center {
       flex: 1;
+      flex-direction: column;
       text-align: center;
+      justify-content: center;
     }
 
-    .header-center h1,
+    .header-center h1 {
+      font-size: 22px;
+      margin: 2px 0;
+      font-weight: bold;
+    }
+
     .header-center h2 {
+      font-size: 16px;
       margin: 0;
+      font-weight: normal;
     }
 
     .filtros {
+      max-width: 800px;
+      margin: 30px auto 10px;
+      padding: 0 20px;
       text-align: center;
-      margin: 20px;
+    }
+
+    .filtros label {
+      font-weight: bold;
+      margin: 0 10px 0 0;
+      color: #660021;
     }
 
     .filtros select,
     .filtros button {
-      padding: 10px;
-      margin: 5px;
+      padding: 8px 14px;
+      margin: 0 10px 10px 0;
       font-size: 16px;
       border-radius: 6px;
+      border: 1px solid #660021;
     }
 
     .filtros button {
-      background-color: #660021;
+      background: linear-gradient(to right, #660021, #00333a);
       color: white;
       border: none;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
 
     .filtros button:hover {
-      background-color: #ffcc00;
+      background: #ffcc00;
       color: #00333a;
+      transform: scale(1.05);
     }
 
     .contenedor {
@@ -67,6 +93,8 @@
       justify-content: center;
       padding: 20px;
       gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto 40px;
     }
 
     .apartado {
@@ -76,24 +104,24 @@
       width: 280px;
       background-color: #f9f9f9;
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
     }
 
     .apartado h2 {
       background-color: #660021;
       color: white;
       padding: 10px;
-      margin: 0 0 10px 0;
+      margin: 0 0 15px 0;
       border-radius: 5px;
-      text-align: center;
+      font-size: 18px;
     }
 
     .apartado .reporte {
-      margin: 6px 0;
-      padding: 6px;
+      margin: 8px 0;
+      padding: 10px;
       background-color: #fff;
       border: 1px solid #00333a;
-      border-radius: 5px;
-      text-align: center;
+      border-radius: 6px;
       font-weight: bold;
       color: #00333a;
     }
@@ -101,26 +129,25 @@
     .apartado .reporte.empty {
       color: #999;
       font-style: italic;
+      border-color: #999;
     }
   </style>
 </head>
 <body>
 
-<!-- ENCABEZADO -->
 <header>
   <div class="header-left">
     <img src="img/chapul.png" alt="Chapulhuacán" />
   </div>
   <div class="header-center">
     <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
-    <h2>Análisis Presupuestal por Departamento</h2>
+    <h2>Análisis Plan de Actividades por Departamento</h2>
   </div>
   <div class="header-right">
     <img src="img/planeacion.png" alt="Planeación" />
   </div>
 </header>
-
-<!-- FILTROS -->
+  
 <div class="filtros">
   <label for="mes">Mes:</label>
   <select id="mes">
@@ -147,10 +174,7 @@
   <button onclick="consultarReportes()">Consultar</button>
 </div>
 
-<!-- TARJETAS DEPARTAMENTOS -->
-<div class="contenedor" id="contenedorDepartamentos">
-  <!-- Estas se generan automáticamente con JavaScript -->
-</div>
+<div class="contenedor" id="contenedorDepartamentos"></div>
 
 <script>
   const departamentos = [
@@ -169,7 +193,7 @@
       div.className = "apartado";
       div.innerHTML = `
         <h2>${dep}</h2>
-        <div class="reporte empty">Plan Presupuestal: Sin registro</div>
+        <div class="reporte empty">Plan de Actividades: Sin registro</div>
         <div class="reporte empty">Imágenes: Sin registro</div>
       `;
       contenedor.appendChild(div);
@@ -180,7 +204,6 @@
     const mes = document.getElementById("mes").value;
     const anio = document.getElementById("anio").value;
 
-    // Lógica para obtener los datos desde backend, simulada aquí
     fetch(`backend/consultar_reportes.php?mes=${mes}&anio=${anio}`)
       .then(res => res.json())
       .then(data => {
@@ -191,7 +214,7 @@
             if (tarjeta.querySelector("h2").textContent === rep.departamento) {
               tarjeta.innerHTML = `
                 <h2>${rep.departamento}</h2>
-                <div class="reporte">Plan Presupuestal: ${rep.plan || "No disponible"}</div>
+                <div class="reporte">Plan de Actividades: ${rep.plan || "No disponible"}</div>
                 <div class="reporte">Imágenes: ${rep.imagenes || "No disponible"}</div>
               `;
             }
@@ -200,8 +223,8 @@
       });
   }
 
-  // Mostrar todos al cargar
-  window.onload = crearTarjetasVacias;
+  // Mostrar tarjetas vacías al cargar la página
+  document.addEventListener("DOMContentLoaded", crearTarjetasVacias);
 </script>
 
 </body>

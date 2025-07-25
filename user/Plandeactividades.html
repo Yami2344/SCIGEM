@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <title>Programa Operativo Anual (POA)</title>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -152,26 +156,82 @@
       cursor: pointer;
       margin: 5px;
     }
+    #listaNotificaciones li {
+    color: black;     
+    font-size: 14px;
+    padding: 5px 0;
+    }
+    #notificaciones h4 {
+    color: black;
+    font-size: 16px;
+    margin-bottom: 10px;
+    }
+
+
+    #notificaciones {
+  pointer-events: auto;
+}
+
+
+
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-left">
-      <a href="../index.html" title="Regresar">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
-          <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
-      <img src="img/chapul.png" alt="Chapulhuacán" class="header-logo" />
-    </div>
-    <div class="header-center">
-      <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
-      <h2>Área: Planeación Municipal</h2>
-    </div>
-    <div class="header-right">
-      <img src="img/planeacion.png" alt="Planeación" class="header-logo" />
-    </div>
-  </header>
+<header>
+  <div class="header-left">
+    <a href="../index.html" title="Regresar">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <img src="img/chapul.png" alt="Chapulhuacán" class="header-logo" />
+  </div>
+
+  <div class="header-center">
+    <h1>PROGRAMA OPERATIVO ANUAL (POA)</h1>
+    <h2>Área: Planeación Municipal</h2>
+  </div>
+
+<div class="header-right" style="display: flex; align-items: center; gap: 20px; position: relative;">
+  <!-- Logo -->
+  <img src="img/planeacion.png" alt="Planeación" class="header-logo" />
+
+  <!-- Campanita 🔔 -->
+  <div id="campana" onclick="mostrarNotificaciones()" style="cursor: pointer; position: relative; font-size: 28px;">
+    🔔
+    <span id="contador" style="
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+      font-weight: bold;
+    ">0</span>
+  </div>
+
+  <!-- Panel flotante de notificaciones -->
+  <div id="notificaciones" style="
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    max-width: 300px;
+    z-index: 999;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  ">
+    <h4 style="margin-top: 0;">Notificaciones</h4>
+    <ul id="listaNotificaciones" style="list-style: none; padding-left: 0; margin: 0;"></ul>
+  </div>
+</div>
+
+</header>
+
 
   <div class="calendar-controls">
     <label>Mes:
@@ -228,146 +288,153 @@
     <button onclick="deleteRow()" class="button">🗑️ Eliminar Actividad</button>
     <button onclick="window.location.href='evidencias.html'" class="button">📤 Subir Evidencia</button>
     <button onclick="exportarExcel()" class="button">📥 Exportar Excel</button>
+     <button onclick="guardarActividades()" class="button">💾 Guardar Actividades</button>
   </div>
+  
 
-  <!-- Librería SheetJS para exportar Excel -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+  let colorSeleccionado = "";
+  let diasDelMes = [];
 
-  <script>
-    let colorSeleccionado = "";
-    let diasDelMes = [];
+  function seleccionarColor(color) {
+    colorSeleccionado = color;
+  }
 
-    function seleccionarColor(color) {
-      colorSeleccionado = color;
+  function pintarCelda(celda) {
+    if (colorSeleccionado) {
+      celda.style.backgroundColor = colorSeleccionado;
+    }
+  }
+
+  function autoExpandHorizontal(textarea) {
+    textarea.style.width = 'auto';
+    textarea.style.width = (textarea.scrollWidth + 2) + 'px';
+  }
+
+  function addRow() {
+    const actBody = document.getElementById("actividadBody");
+    const calBody = document.getElementById("calendarBody");
+    const index = actBody.rows.length + 1;
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${index}</td>
+      <td><textarea oninput="autoExpandHorizontal(this)"></textarea></td>
+      <td><textarea oninput="autoExpandHorizontal(this)"></textarea></td>
+      <td><textarea oninput="autoExpandHorizontal(this)"></textarea></td>
+      <td><textarea oninput="autoExpandHorizontal(this)"></textarea></td>
+      <td><textarea oninput="autoExpandHorizontal(this)"></textarea></td>
+    `;
+    actBody.appendChild(row);
+
+    const calRow = document.createElement("tr");
+    const tdTitulo = document.createElement("td");
+    tdTitulo.textContent = `Act. ${index}`;
+    calRow.appendChild(tdTitulo);
+
+    diasDelMes.forEach(() => {
+      const td = document.createElement("td");
+      td.classList.add("day-cell");
+      td.contentEditable = true;
+      td.addEventListener("click", () => pintarCelda(td));
+      calRow.appendChild(td);
+    });
+
+    calBody.appendChild(calRow);
+  }
+
+  function deleteRow() {
+    const actBody = document.getElementById("actividadBody");
+    const calBody = document.getElementById("calendarBody");
+    if (actBody.rows.length > 0) {
+      actBody.deleteRow(actBody.rows.length - 1);
+      calBody.deleteRow(calBody.rows.length - 1);
+    }
+  }
+
+  function crearDiasCalendario(mes, anio) {
+    const header = document.getElementById("calendarHeader");
+    const calBody = document.getElementById("calendarBody");
+    const actBody = document.getElementById("actividadBody");
+
+    header.innerHTML = "<tr><th>Día</th></tr>";
+    diasDelMes = [];
+
+    const numDias = new Date(anio, mes + 1, 0).getDate();
+    for (let i = 1; i <= numDias; i++) {
+      const th = document.createElement("th");
+      th.textContent = i;
+      header.querySelector("tr").appendChild(th);
+      diasDelMes.push(i);
     }
 
-    function pintarCelda(celda) {
-      if (colorSeleccionado) {
-        celda.style.backgroundColor = colorSeleccionado;
-      }
-    }
-
-function autoExpandHorizontal(textarea) {
-  textarea.style.width = 'auto';
-  textarea.style.width = (textarea.scrollWidth + 2) + 'px';
-}
-
-
-    function addRow() {
-      const actBody = document.getElementById("actividadBody");
-      const calBody = document.getElementById("calendarBody");
-      const index = actBody.rows.length + 1;
-
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${index}</td>
-    <td><textarea oninput="autoExpandHorizontal(this)" placeholder="Actividad"></textarea></td>
-    <td><textarea oninput="autoExpandHorizontal(this)" placeholder="Acuerdo"></textarea></td>
-    <td><textarea oninput="autoExpandHorizontal(this)" placeholder="Objetivo"></textarea></td>
-    <td><textarea oninput="autoExpandHorizontal(this)" placeholder="Estrategia"></textarea></td>
-    <td><textarea oninput="autoExpandHorizontal(this)" placeholder="Línea de Acción"></textarea></td>
-      `;
-      actBody.appendChild(row);
-
+    calBody.innerHTML = "";
+    for (let i = 0; i < actBody.rows.length; i++) {
       const calRow = document.createElement("tr");
       const tdTitulo = document.createElement("td");
-      tdTitulo.textContent = `Act. ${index}`;
+      tdTitulo.textContent = `Act. ${i + 1}`;
       calRow.appendChild(tdTitulo);
 
       diasDelMes.forEach(() => {
         const td = document.createElement("td");
         td.classList.add("day-cell");
         td.contentEditable = true;
-        td.onclick = () => pintarCelda(td);
+        td.addEventListener("click", () => pintarCelda(td));
         calRow.appendChild(td);
       });
 
       calBody.appendChild(calRow);
     }
+  }
 
-    function deleteRow() {
-      const actBody = document.getElementById("actividadBody");
-      const calBody = document.getElementById("calendarBody");
-      if (actBody.rows.length > 0) {
-        actBody.deleteRow(actBody.rows.length - 1);
-        calBody.deleteRow(calBody.rows.length - 1);
-      }
+  function initMonthYear() {
+    const mesSelect = document.getElementById("month");
+    const yearSelect = document.getElementById("year");
+
+    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+    meses.forEach((m, i) => mesSelect.appendChild(new Option(m, i)));
+
+    const anioActual = new Date().getFullYear();
+    for (let y = anioActual - 3; y <= anioActual + 3; y++) {
+      yearSelect.appendChild(new Option(y, y));
     }
 
-    function crearDiasCalendario(mes, anio) {
-      const header = document.getElementById("calendarHeader");
-      const calBody = document.getElementById("calendarBody");
-      const actBody = document.getElementById("actividadBody");
+    mesSelect.value = new Date().getMonth();
+    yearSelect.value = anioActual;
 
-      header.innerHTML = "<tr><th>Día</th></tr>";
-      diasDelMes = [];
+    mesSelect.onchange = () => crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
+    yearSelect.onchange = () => crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
 
-      const numDias = new Date(anio, mes + 1, 0).getDate();
-      for (let i = 1; i <= numDias; i++) {
-        const th = document.createElement("th");
-        th.textContent = i;
-        header.querySelector("tr").appendChild(th);
-        diasDelMes.push(i);
+    crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
+  }
+
+  function exportarExcel() {
+    const wb = XLSX.utils.book_new();
+    const tablaActividades = document.getElementById("actividadTable");
+    const ws1 = XLSX.utils.table_to_sheet(tablaActividades);
+    XLSX.utils.book_append_sheet(wb, ws1, "Actividades");
+
+    const calendarTable = document.getElementById("calendarTable");
+    const ws2 = XLSX.utils.aoa_to_sheet([]);
+    const filas = calendarTable.rows;
+
+    for (let i = 0; i < filas.length; i++) {
+      const filaExcel = [];
+      const celdas = filas[i].cells;
+
+      for (let j = 0; j < celdas.length; j++) {
+        const celda = celdas[j];
+        const texto = celda.innerText || celda.textContent;
+        filaExcel.push(texto);
       }
-
-      calBody.innerHTML = "";
-      for (let i = 0; i < actBody.rows.length; i++) {
-        const calRow = document.createElement("tr");
-        const tdTitulo = document.createElement("td");
-        tdTitulo.textContent = `Act. ${i + 1}`;
-        calRow.appendChild(tdTitulo);
-
-        diasDelMes.forEach(() => {
-          const td = document.createElement("td");
-          td.classList.add("day-cell");
-          td.contentEditable = true;
-          td.onclick = () => pintarCelda(td);
-          calRow.appendChild(td);
-        });
-
-        calBody.appendChild(calRow);
-      }
+      XLSX.utils.sheet_add_aoa(ws2, [filaExcel], { origin: -1 });
     }
 
-    function initMonthYear() {
-      const mesSelect = document.getElementById("month");
-      const yearSelect = document.getElementById("year");
+    XLSX.utils.book_append_sheet(wb, ws2, "Calendario");
+    XLSX.writeFile(wb, "POA_Actividades_Completo.xlsx");
+  }
 
-      const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-
-      meses.forEach((m, i) => mesSelect.appendChild(new Option(m, i)));
-
-      const anioActual = new Date().getFullYear();
-      for (let y = anioActual - 3; y <= anioActual + 3; y++) {
-        yearSelect.appendChild(new Option(y, y));
-      }
-
-      mesSelect.value = new Date().getMonth();
-      yearSelect.value = anioActual;
-
-      mesSelect.onchange = () => crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
-      yearSelect.onchange = () => crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
-
-      crearDiasCalendario(parseInt(mesSelect.value), parseInt(yearSelect.value));
-    }
-
-    function exportarExcel() {
-      const wb = XLSX.utils.book_new();
-      const ws1 = XLSX.utils.table_to_sheet(document.getElementById("actividadTable"));
-      const ws2 = XLSX.utils.table_to_sheet(document.getElementById("calendarTable"));
-      XLSX.utils.book_append_sheet(wb, ws1, "Actividades");
-      XLSX.utils.book_append_sheet(wb, ws2, "Calendario");
-      XLSX.writeFile(wb, "POA_Actividades.xlsx");
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      initMonthYear();
-      addRow();
-
-      
-    });
-<!-- Fragmento del Plan de Actividades (agregar al final del script existente) -->
   function guardarActividades() {
     const actividades = [];
     const filas = document.querySelectorAll("#actividadBody tr");
@@ -388,12 +455,157 @@ function autoExpandHorizontal(textarea) {
     localStorage.setItem("actividadesPOA", JSON.stringify(actividades));
     alert("✅ Actividades guardadas correctamente.");
   }
-</script>
 
-<!-- Botón para guardar -->
-<button onclick="guardarActividades()" class="button">💾 Guardar Actividades</button>
+  document.addEventListener("DOMContentLoaded", () => {
+    initMonthYear();
+    cargarNotificaciones();
+  });
 
-    
+async function exportarExcelConColores() {
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet("POA");
+
+  const tabla = document.getElementById("actividadTable");
+  const filas = tabla.rows;
+
+  for (let i = 0; i < filas.length; i++) {
+    const filaExcel = worksheet.addRow([]);
+    const celdas = filas[i].cells;
+
+    for (let j = 0; j < celdas.length; j++) {
+      const celdaHTML = celdas[j];
+      const celdaTexto = celdaHTML.innerText || celdaHTML.textContent;
+      const excelCell = filaExcel.getCell(j + 1);
+      excelCell.value = celdaTexto;
+
+      // Detectar color de fondo
+      const bg = window.getComputedStyle(celdaHTML).backgroundColor;
+
+      // Aplicar color si no es blanco
+      if (bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent" && bg !== "rgb(255, 255, 255)") {
+        const hexColor = rgbToHex(bg);
+        excelCell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: hexColor.replace("#", "") }
+        };
+      }
+
+      excelCell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" }
+      };
+    }
+  }
+
+  const blob = await workbook.xlsx.writeBuffer();
+  saveAs(new Blob([blob]), "POA_Actividades_Completo.xlsx");
+}
+
+function rgbToHex(rgb) {
+  const result = rgb.match(/\d+/g).map(x => parseInt(x).toString(16).padStart(2, "0"));
+  return "#" + result.join("");
+}
+
+  
+const idUsuario = 6; // Cambia al id real del usuario
+
+function cargarNotificaciones() {
+  if (!idUsuario) {
+    console.error("ID de usuario no definido");
+    return;
+  } 
+  fetch('../cargar_notificaciones.php?id=' + idUsuario)
+    .then(response => {
+      if (!response.ok) throw new Error('Error HTTP: ' + response.status);
+      return response.json();
+    })
+    .then(data => {
+      const lista = document.getElementById("listaNotificaciones");
+      const contador = document.getElementById("contador");
+      lista.innerHTML = "";
+      let noLeidas = 0;
+
+      data.forEach(n => {
+        const li = document.createElement("li");
+        li.style.padding = "5px 0";
+        li.style.display = "flex";
+        li.style.justifyContent = "space-between";
+        li.style.alignItems = "center";
+
+        const mensaje = document.createElement("span");
+        mensaje.textContent = n.mensaje;
+        if (n.leido == 0) {
+          mensaje.style.fontWeight = "bold";
+          noLeidas++;
+        }
+
+        const btnEliminar = document.createElement("button");
+        btnEliminar.textContent = "❌";
+        btnEliminar.style.border = "none";
+        btnEliminar.style.background = "transparent";
+        btnEliminar.style.cursor = "pointer";
+        btnEliminar.title = "Eliminar notificación";
+
+        btnEliminar.onclick = () => {
+          if (confirm("¿Eliminar esta notificación?")) {
+            const formData = new URLSearchParams();
+            formData.append("id", idUsuario);
+            formData.append("id_notificacion", n.id);
+
+            fetch("../eliminar_notificaciones.php", {
+  method: "POST",
+  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  body: formData.toString()
+})
+  .then(res => res.text())  // CAMBIAR .json() a .text() para ver qué llega
+  .then(text => {
+    console.log("Respuesta cruda:", text);  // Ver qué se recibió
+    const result = JSON.parse(text);        // Intentar parsear
+    if (result.success) {
+      cargarNotificaciones();
+    } else {
+      alert("Error al eliminar: " + result.error);
+    }
+  })
+  .catch(err => {
+    console.error("Error eliminando notificación:", err);
+  });
+
+        };
+
+        li.appendChild(mensaje);
+        li.appendChild(btnEliminar);
+        lista.appendChild(li);
+      };
+      }); 
+
+      contador.textContent = noLeidas;
+    })
+    .catch(error => {
+      console.error('Error al cargar notificaciones:', error);
+      document.getElementById("listaNotificaciones").innerHTML = "<li style='color:red;'>Error al cargar notificaciones</li>";
+      document.getElementById("contador").textContent = "0";
+    });
+}
+
+function mostrarNotificaciones() {
+  const panel = document.getElementById("notificaciones");
+  const visible = panel.style.display === "block";
+  panel.style.display = visible ? "none" : "block";
+
+  if (!visible) {
+    fetch('../marcar_leidas.php?id=' + idUsuario)
+      .then(() => cargarNotificaciones())
+      .catch(error => console.error("Error al marcar como leídas:", error));
+  }
+}
+
+
+
+
   </script>
 </body>
 </html>
